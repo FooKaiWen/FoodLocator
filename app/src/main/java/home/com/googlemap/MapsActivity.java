@@ -3,7 +3,9 @@ package home.com.googlemap;
 import android.*;
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
@@ -13,11 +15,13 @@ import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -49,6 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
+
     private GoogleMap mMap;
     private GoogleApiClient client;
     private LocationRequest locationRequest;
@@ -71,6 +76,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        final Context context = this;
+        FloatingActionButton randomFill = (FloatingActionButton) findViewById(R.id.randomFilters);
+        randomFill.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                //Supposed to execute random fill of filters but for now executes activity shift for
+                //debugging of restaurant profile activity.
+                Intent intent = new Intent(context, Test.class);
+                startActivity(intent);
+            }
+        });
     }
 
     /**
