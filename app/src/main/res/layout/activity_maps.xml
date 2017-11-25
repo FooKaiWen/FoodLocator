@@ -2,46 +2,30 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
-    android:layout_width="match_parent"
-    android:layout_height="470dp"
-    android:layout_alignParentBottom="true"
-    tools:context="home.com.googlemap.MapsActivity" />
 
-    <EditText
-        android:id="@+id/editSearch"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:ems="10"
-        android:inputType="textPersonName" />
-
-    <Button
-        android:id="@+id/searchButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/editSearch"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:onClick="onClick"
-        android:text="Search" />
+        tools:context="home.com.googlemap.MapsActivity" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/randomFilters"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="43dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginStart="40dp"
-        android:clickable="true" />
+        android:layout_marginEnd="41dp"
+        android:layout_marginRight="41dp"
+        android:clickable="true"
+        android:focusable="true"/>
 
 </RelativeLayout>
