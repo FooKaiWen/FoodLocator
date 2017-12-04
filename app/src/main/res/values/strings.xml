@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Map</string>
+    <string name="app_name">Food Locator</string>
     <string name="title_activity_maps">Food Locator</string>
     <string name="title_activity_test">Test</string>
 </resources>
