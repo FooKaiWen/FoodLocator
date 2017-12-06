@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,7 +64,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final String TAG = MapsActivity.class.getSimpleName();
     public static final int REQUEST_PERMISSION_CODE = 99;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    //idk why but the program crashes with this code.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +89,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
         TextView rn = (TextView) findViewById(R.id.restaurantName);
+        ImageView ri = (ImageView)findViewById(R.id.restaurantImage);
         rn.setText("Restaurant Name");//Default for design purposes
-        //idk why but the program crashes with this code.
     }
 
     /**
