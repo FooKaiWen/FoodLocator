@@ -3,18 +3,69 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    
-    <ImageView
-        android:src="@drawable/subaidah"
-        android:layout_centerInParent="true"
+
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    
-    
-    
-    
-    
-    
-    
-    
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="21dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="13dp"
+        android:lineSpacingExtra="14sp"
+        android:text="Restaurant Name"
+        android:textAlignment="gravity"
+        android:textSize="30sp" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:foregroundGravity="center_horizontal"
+        android:paddingTop="25dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView"
+        android:src="@drawable/subaidah" />
+
+    <Space
+        android:id="@+id/centerAnchor"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="center_horizontal"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@+id/centerAnchor"
+        android:text="Call" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="center_horizontal"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/centerAnchor"
+        android:text="Uber" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/button2"
+        android:layout_marginTop="20dp"></ListView>
+
+
 </RelativeLayout>

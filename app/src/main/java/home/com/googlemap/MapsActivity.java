@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -62,6 +63,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final String TAG = MapsActivity.class.getSimpleName();
     public static final int REQUEST_PERMISSION_CODE = 99;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    //private TextView rn = (TextView) findViewById(R.id.restaurantName);
+    //idk why but the program crashes with this code.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,10 +87,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View view){
                 //Supposed to execute random fill of filters but for now executes activity shift for
                 //debugging of restaurant profile activity.
-                Intent intent = new Intent(context, Test.class);
-                startActivity(intent);
             }
         });
+        //rn.setText("Restaurant Name");//Default for design purposes
+        //idk why but the program crashes with this code.
     }
 
     /**
