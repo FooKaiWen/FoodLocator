@@ -11,4 +11,5 @@
     <include layout="@layout/activity_maps"/>
 
     <include layout="@layout/activity_sliding"/>
+
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>
