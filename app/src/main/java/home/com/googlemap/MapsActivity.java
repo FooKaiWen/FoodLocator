@@ -63,7 +63,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final String TAG = MapsActivity.class.getSimpleName();
     public static final int REQUEST_PERMISSION_CODE = 99;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    //private TextView rn = (TextView) findViewById(R.id.restaurantName);
     //idk why but the program crashes with this code.
 
     @Override
@@ -89,7 +88,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //debugging of restaurant profile activity.
             }
         });
-        //rn.setText("Restaurant Name");//Default for design purposes
+        TextView rn = (TextView) findViewById(R.id.restaurantName);
+        rn.setText("Restaurant Name");//Default for design purposes
         //idk why but the program crashes with this code.
     }
 
