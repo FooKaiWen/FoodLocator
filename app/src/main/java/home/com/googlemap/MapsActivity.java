@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,9 +49,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import java.lang.Object;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -77,11 +79,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        final Context context = this;
         FloatingActionButton randomFill = (FloatingActionButton) findViewById(R.id.randomFilters);
         randomFill.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -93,6 +93,56 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         TextView rn = (TextView) findViewById(R.id.restaurantName);
         ImageView ri = (ImageView)findViewById(R.id.restaurantImage);
         rn.setText("Restaurant Name");//Default for design purposes
+
+        mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+
+        Button callB = (Button) findViewById(R.id.callButton);
+        callB.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                // example
+                String phoneNo = "016-2145305";
+                if(!phoneNo.isEmpty()){
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:" + phoneNo)); // get the phone number from the phone number area.
+
+                    if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    startActivity(callIntent);
+                } else if (phoneNo.isEmpty()){ // reject the user from calling without phone number input.
+                    Toast.makeText(getApplicationContext(), "Invalid phone number", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        Button uberB = (Button) findViewById(R.id.transportButton);
+        uberB.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0){
+                PackageManager pm = getPackageManager();
+                try {
+                    pm.getPackageInfo("com.ubercab", PackageManager.GET_ACTIVITIES);
+                    // example
+                    double longitude = 100.302518;
+                    double latitude = 5.355934;
+                    String uri = "uber://?client_id=<CLIENT_ID>" +
+                            "&action=setPickup&pickup=my_location&pickup[nickname]=You" +
+                            "&dropoff[latitude]="+latitude+"&dropoff[longitude]="+longitude+"&dropoff[nickname]=Destination" +
+                            "&product_id=a1111c8c-c720-46c3-8534-2fcdd730040d" +
+                            "&link_text=View%20team%20roster" +
+                            "&partner_deeplink=partner%3A%2F%2Fteam%2F9383";
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(uri));
+                    startActivity(intent);
+                } catch (PackageManager.NameNotFoundException e) {
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.ubercab")));
+                    } catch (android.content.ActivityNotFoundException anfe) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.ubercab")));
+                    }
+                }
+            }
+        });
+
     }
 
     /**
@@ -354,7 +404,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onBackPressed() {
         if (mLayout != null &&
-                (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED || mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
+                (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)) {
             mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);

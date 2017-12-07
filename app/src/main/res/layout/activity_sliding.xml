@@ -50,7 +50,7 @@
         android:layout_marginTop="24dp" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/callButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/restaurantImage"
@@ -60,7 +60,7 @@
         android:text="Call" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/transportButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/restaurantImage"
