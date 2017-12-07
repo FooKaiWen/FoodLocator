@@ -90,9 +90,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //debugging of restaurant profile activity.
             }
         });
+
+        //Text views set to defaults for design purposes
         TextView rn = (TextView) findViewById(R.id.restaurantName);
+        rn.setText("Restaurant Name");
         ImageView ri = (ImageView)findViewById(R.id.restaurantImage);
-        rn.setText("Restaurant Name");//Default for design purposes
+
+        TextView operatingDaysStart = (TextView) findViewById(R.id.operatingDaysField_Start);
+        operatingDaysStart.setText("Wednesday");
+        TextView operatingDaysEnd = (TextView) findViewById(R.id.operatingDaysField_End);
+        operatingDaysEnd.setText("Wednesday");
+        TextView operatingHoursStart = (TextView) findViewById(R.id.operatingHoursField_Start);
+        operatingHoursStart.setText("88:88");
+        TextView operatingHoursEnd = (TextView) findViewById(R.id.operatingHoursField_End);
+        operatingHoursEnd.setText("88:88");
 
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
 
