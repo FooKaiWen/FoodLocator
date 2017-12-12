@@ -80,7 +80,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         db.addRestaurant(new Restaurant("KFC", "100.3035279","5.3524329"));
         db.addRestaurant(new Restaurant("McDonald's", "100.299399","5.3525673"));
         db.addRestaurant(new Restaurant("Restaurant Kim Hin ", "100.298094399999","5.35150939999999"));
-
+        db.addRestaurant(new Restaurant("USM","100.302518","5.355934"));
+        
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             checkLocationPermission();
         }
@@ -127,7 +128,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         callB.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
                 // example
-                String phoneNo = "*017-5818160";
+                String phoneNo = "017-5818160";
                 if(!phoneNo.isEmpty()){
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
                     callIntent.setData(Uri.parse("tel:" + phoneNo)); // get the phone number from the phone number area.
