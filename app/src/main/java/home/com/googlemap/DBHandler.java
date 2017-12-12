@@ -16,7 +16,8 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String TABLE_RESTAURANT = "restaurant";
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
-    private static final String KEY_RES_ADD = "restaurant_address";
+    private static final String KEY_LONGITUDE = "restaurant_longitude";
+    private static final String KEY_LATITUDE = "restaurant_latitude";
 
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -26,7 +27,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_RESTAURANT_TABLE = "CREATE TABLE " + TABLE_RESTAURANT + "("
                 + KEY_ID + "INTEGER PRIMARY KEY," + KEY_NAME + "TEXT,"
-                + KEY_RES_ADD + "TEXT" + ")";
+                + KEY_LONGITUDE + "REAL," + KEY_LATITUDE + "REAL" + ")";
         db.execSQL(CREATE_RESTAURANT_TABLE);
     }
 
@@ -43,7 +44,8 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, restaurant.getName()); // Restaurant Name
-        values.put(KEY_RES_ADD, restaurant.getAddress()); // Restaurant Phone Number
+        values.put(KEY_LONGITUDE, restaurant.getLongitude());
+        values.put(KEY_LATITUDE, restaurant.getLatitude());
 
 // Inserting Row
         db.insert(TABLE_RESTAURANT, null, values);
@@ -56,13 +58,13 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_RESTAURANT, new String[]{KEY_ID,
-                        KEY_NAME, KEY_RES_ADD}, KEY_ID + " =?",
+                        KEY_NAME, KEY_LONGITUDE, KEY_LATITUDE}, KEY_ID + " =?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
 
         Restaurant restaurant = new Restaurant(Integer.parseInt(cursor.getString(0)),
-                cursor.getString(1), cursor.getString(2));
+                cursor.getString(1), cursor.getString(2), cursor.getString(3));
 // return shop
         return restaurant;
     }
@@ -82,7 +84,9 @@ public class DBHandler extends SQLiteOpenHelper {
                 Restaurant restaurant = new Restaurant();
                 restaurant.setId(Integer.parseInt(cursor.getString(0)));
                 restaurant.setName(cursor.getString(1));
-                restaurant.setAddress(cursor.getString(2));
+                restaurant.setLongitude(cursor.getString(2));
+                restaurant.setLatitude(cursor.getString(3));
+
 // Adding contact to list
                 restaurantList.add(restaurant);
             } while (cursor.moveToNext());

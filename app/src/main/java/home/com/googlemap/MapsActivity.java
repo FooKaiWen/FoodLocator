@@ -75,10 +75,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.sliding_layout);
 
         DBHandler db = new DBHandler(this);
-        db.addRestaurant(new Restaurant("Bumbledee's at 1938", " B07 Rumah Tetamu, Universiti Sains Malaysia, Penang Island 11700, Malaysia"));
-        db.addRestaurant(new Restaurant("KFC", "559 & 559A, Jalan Taman Sri Saujana,, Sungai Dua, 11700 George Town, Pulau Pinang"));
-        db.addRestaurant(new Restaurant("McDonald's", "4 B-C-D, Jalan Sungai Dua, 11700 Gelugor, Pulau Pinang"));
-        db.addRestaurant(new Restaurant("Restaurant Kim Hin ", "MK 13, 674C, Jalan Sungai Dua, Taman Pekaka, 11700 Gelugor, Pulau Pinang"));
+        db.addRestaurant(new Restaurant("Bumbledee's at 1938", " 100.306943888888", "5.3620769"));
+        db.addRestaurant(new Restaurant("KFC", "100.3035279","5.3524329"));
+        db.addRestaurant(new Restaurant("McDonald's", "100.299399","5.3525673"));
+        db.addRestaurant(new Restaurant("Restaurant Kim Hin ", "100.298094399999","5.35150939999999"));
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             checkLocationPermission();

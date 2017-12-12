@@ -7,22 +7,27 @@ package home.com.googlemap;
 public class Restaurant {
     private int id;
     private String name;
-    private String address;
+    private String longitude;
+    private String latitude;
 
-    public Restaurant(int id, String name, String address) {
+    public Restaurant(int id, String name, String longitude, String latitude) {
         this.id = id;
         this.name = name;
-        this.address = address;
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
+
+
+    public Restaurant(String name, String longitude, String latitude) {
+        this.name = name;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
     public Restaurant() {
 
     }
 
-    public Restaurant(String name, String address) {
-        this.name = name;
-        this.address = address;
-    }
 
     public int getId() {
         return id;
@@ -40,11 +45,19 @@ public class Restaurant {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
+    public String getLongitude() {
+        return longitude;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 }
