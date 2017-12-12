@@ -52,6 +52,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.util.Random;
+
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -62,7 +64,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private GoogleApiClient client;
-    private LocationRequest locationRequest;
     private Location lastLocation;
     private Marker currentLocationMarker;
     public static final String TAG = MapsActivity.class.getSimpleName();
@@ -92,8 +93,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         randomFill.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                //Supposed to execute random fill of filters but for now executes activity shift for
-                //debugging of restaurant profile activity.
+                int numberofRow = 0;
+                int randomNum = new Random().nextInt(numberofRow + 1);
+                // retrieve the name of the marker and match it in the database
+                // display it all out in the
             }
         });
 
@@ -113,11 +116,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
 
+        mLayout.setFadeOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+        });
+
         Button callB = (Button) findViewById(R.id.callButton);
         callB.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
                 // example
-                String phoneNo = "016-2145305";
+                String phoneNo = "*017-5818160";
                 if(!phoneNo.isEmpty()){
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
                     callIntent.setData(Uri.parse("tel:" + phoneNo)); // get the phone number from the phone number area.
@@ -231,14 +241,57 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         setUpMap();
+        addMarker();
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener(){
+            @Override
+            public boolean onMarkerClick(Marker currentM) {
+                Toast.makeText(getApplicationContext(),currentM.getTag().toString(),Toast.LENGTH_LONG).show();
+                currentM.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                // change marker colour
+                // get id then
+                // getData(name, time, address, price)
+                // create the function above
+                return false;
+            }
+        }
+        );
 
-        /*if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                // there is orange, red, yellow marker,
+                // then change all to default colour.
+            }
+        });
 
-            buildingGoogleApiClient();
-            mMap.setMyLocationEnabled(true);
+//        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//
+//            buildingGoogleApiClient();
+//            mMap.setMyLocationEnabled(true);
+//
+//        }
 
-        }*/
+        }
 
+    public void addMarker(){
+        // need latitude, longitude, id
+        double latitude = 5.355934;
+        double longitude = 100.302518;
+        String name = "USM";
+        LatLng latlng = new LatLng(latitude,longitude);
+        MarkerOptions markerOptions = new MarkerOptions().position(latlng).title(name);
+
+        String cuisineType = "-";
+        if(cuisineType.matches("Halal")){
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        } else if(cuisineType.matches("Non-halal")){
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+        } else
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+
+        currentLocationMarker = mMap.addMarker(markerOptions);
+        int id = 5;
+        currentLocationMarker.setTag(id);
     }
 
     protected synchronized void buildingGoogleApiClient() {
@@ -254,7 +307,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(Location location) {
-        handleNewLocation(location);
+        //handleNewLocation(location);
+        lastLocation = location;
+
+        if(currentLocationMarker!= null){
+            currentLocationMarker.remove();
+        }
+
+        LatLng latlng = new LatLng(location.getLatitude(),location.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions().position(latlng).title("You are here!");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+
+        currentLocationMarker = mMap.addMarker(markerOptions);
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
+        mMap.animateCamera(CameraUpdateFactory.zoomBy(10));
+
+        if(client!= null){
+            LocationServices.FusedLocationApi.removeLocationUpdates(client,this);
+        }
     }
 
     public void handleNewLocation(Location location){
@@ -316,7 +387,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        locationRequest = LocationRequest.create();
+        LocationRequest locationRequest = LocationRequest.create();
 
         locationRequest.setInterval(30*1000);
         locationRequest.setFastestInterval(5*1000);
@@ -446,11 +517,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (checkLocationPermission())
         {
             UiSettings mUiSettings = mMap.getUiSettings();
-            mUiSettings.setZoomControlsEnabled(true);
             mMap.setMyLocationEnabled(true);
             mUiSettings.setMyLocationButtonEnabled(true);
             mUiSettings.setTiltGesturesEnabled(true);
-            mUiSettings.setRotateGesturesEnabled(true);
+            mUiSettings.setRotateGesturesEnabled(false);
         }
     }
 
