@@ -22,7 +22,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="118dp"
+        android:layout_marginBottom="81dp"
         android:layout_marginEnd="12dp"
         android:layout_marginRight="12dp"
         android:clickable="true"

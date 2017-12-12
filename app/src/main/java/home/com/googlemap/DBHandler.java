@@ -3,6 +3,7 @@ package home.com.googlemap;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -33,9 +34,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-// Drop older table if existed
+        // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_RESTAURANT);
-// Creating tables again
+        // Creating tables again
         onCreate(db);
     }
 
@@ -47,7 +48,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(KEY_LONGITUDE, restaurant.getLongitude());
         values.put(KEY_LATITUDE, restaurant.getLatitude());
 
-// Inserting Row
+        // Inserting Row
         db.insert(TABLE_RESTAURANT, null, values);
         db.close(); // Closing database connection
 
@@ -65,20 +66,20 @@ public class DBHandler extends SQLiteOpenHelper {
 
         Restaurant restaurant = new Restaurant(Integer.parseInt(cursor.getString(0)),
                 cursor.getString(1), cursor.getString(2), cursor.getString(3));
-// return shop
+        // return shop
         return restaurant;
     }
 
     // Getting All Shops
     public List<Restaurant> getAllRestaurant() {
         List<Restaurant> restaurantList = new ArrayList<Restaurant>();
-// Select All Query
+        // Select All Query
         String selectQuery = "SELECT * FROM " + TABLE_RESTAURANT;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-// looping through all rows and adding to list
+        // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
                 Restaurant restaurant = new Restaurant();
@@ -87,22 +88,24 @@ public class DBHandler extends SQLiteOpenHelper {
                 restaurant.setLongitude(cursor.getString(2));
                 restaurant.setLatitude(cursor.getString(3));
 
-// Adding contact to list
+                // Adding contact to list
                 restaurantList.add(restaurant);
             } while (cursor.moveToNext());
         }
 
-// return contact list
+        // return contact list
         return restaurantList;
     }
 
     // Getting shops Count
     public int getRestaurantCount() {
-        String countQuery = "SELECT * FROM " + TABLE_RESTAURANT;
+//        String countQuery = "SELECT * FROM " + TABLE_RESTAURANT;
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        Cursor cursor = db.rawQuery(countQuery, null);
+//        cursor.close();
+//// return count
+//        return cursor.getCount();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-        cursor.close();
-// return count
-        return cursor.getCount();
+        return (int) DatabaseUtils.queryNumEntries(db, TABLE_RESTAURANT);
     }
 }

@@ -3,6 +3,7 @@ package home.com.googlemap;
 import android.*;
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -69,18 +70,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final String TAG = MapsActivity.class.getSimpleName();
     public static final int REQUEST_PERMISSION_CODE = 99;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    final DBHandler dbHandler = new DBHandler(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sliding_layout);
 
-        DBHandler db = new DBHandler(this);
-        db.addRestaurant(new Restaurant("Bumbledee's at 1938", " 100.306943888888", "5.3620769"));
-        db.addRestaurant(new Restaurant("KFC", "100.3035279","5.3524329"));
-        db.addRestaurant(new Restaurant("McDonald's", "100.299399","5.3525673"));
-        db.addRestaurant(new Restaurant("Restaurant Kim Hin ", "100.298094399999","5.35150939999999"));
-        db.addRestaurant(new Restaurant("USM","100.302518","5.355934"));
+
+        dbHandler.addRestaurant(new Restaurant("Bumbledee's at 1938", " 100.306943888888", "5.3620769"));
+        dbHandler.addRestaurant(new Restaurant("KFC", "100.3035279","5.3524329"));
+        dbHandler.addRestaurant(new Restaurant("McDonald's", "100.299399","5.3525673"));
+        dbHandler.addRestaurant(new Restaurant("Restaurant Kim Hin ", "100.298094399999","5.35150939999999"));
+        dbHandler.addRestaurant(new Restaurant("USM","100.302518","5.355934"));
         
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             checkLocationPermission();
@@ -94,26 +96,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         randomFill.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                int numberofRow = 0;
-                int randomNum = new Random().nextInt(numberofRow + 1);
+                int randomNum = new Random().nextInt(dbHandler.getRestaurantCount() + 1);
                 // retrieve the name of the marker and match it in the database
                 // display it all out in the
             }
         });
 
-        //Text views set to defaults for design purposes
-        TextView rn = (TextView) findViewById(R.id.restaurantName);
-        rn.setText("Restaurant Name");
-        ImageView ri = (ImageView)findViewById(R.id.restaurantImage);
-
-        TextView operatingDaysStart = (TextView) findViewById(R.id.operatingDaysField_Start);
-        operatingDaysStart.setText("Wednesday");
-        TextView operatingDaysEnd = (TextView) findViewById(R.id.operatingDaysField_End);
-        operatingDaysEnd.setText("Wednesday");
-        TextView operatingHoursStart = (TextView) findViewById(R.id.operatingHoursField_Start);
-        operatingHoursStart.setText("88:88");
-        TextView operatingHoursEnd = (TextView) findViewById(R.id.operatingHoursField_End);
-        operatingHoursEnd.setText("88:88");
+        setDetails();
 
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
 
@@ -164,13 +153,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 } catch (PackageManager.NameNotFoundException e) {
                     try {
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.ubercab")));
-                    } catch (android.content.ActivityNotFoundException anfe) {
+                    } catch (ActivityNotFoundException anfe) {
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.ubercab")));
                     }
                 }
             }
         });
 
+    }
+
+    public void setDetails(){
+        //Text views set to defaults for design purposes
+        TextView rn = (TextView) findViewById(R.id.restaurantName);
+        rn.setText("Restaurant Name");
+        ImageView ri = (ImageView)findViewById(R.id.restaurantImage);
+
+        TextView operatingDaysStart = (TextView) findViewById(R.id.operatingDaysField_Start);
+        operatingDaysStart.setText("Wednesday");
+        TextView operatingDaysEnd = (TextView) findViewById(R.id.operatingDaysField_End);
+        operatingDaysEnd.setText("Wednesday");
+        TextView operatingHoursStart = (TextView) findViewById(R.id.operatingHoursField_Start);
+        operatingHoursStart.setText("88:88");
+        TextView operatingHoursEnd = (TextView) findViewById(R.id.operatingHoursField_End);
+        operatingHoursEnd.setText("88:88");
     }
 
     /**
@@ -242,7 +247,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         setUpMap();
-        addMarker();
+        for(int i=1;i<dbHandler.getRestaurantCount()-1;i++){
+            addMarker(i);
+        }
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener(){
             @Override
             public boolean onMarkerClick(Marker currentM) {
@@ -274,13 +281,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
 
-    public void addMarker(){
+    public void addMarker(int id){
         // need latitude, longitude, id
-        double latitude = 5.355934;
-        double longitude = 100.302518;
-        String name = "USM";
-        LatLng latlng = new LatLng(latitude,longitude);
-        MarkerOptions markerOptions = new MarkerOptions().position(latlng).title(name);
+        DBHandler db = new DBHandler(this);
+        Restaurant r = db.getData(id);
+        LatLng latlng = new LatLng(Integer.parseInt(r.getLatitude()),Integer.parseInt(r.getLongitude()));
+        MarkerOptions markerOptions = new MarkerOptions().position(latlng).title(r.getName());
 
         String cuisineType = "-";
         if(cuisineType.matches("Halal")){
@@ -291,7 +297,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 
         currentLocationMarker = mMap.addMarker(markerOptions);
-        int id = 5;
         currentLocationMarker.setTag(id);
     }
 
