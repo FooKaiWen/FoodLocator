@@ -74,6 +74,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sliding_layout);
 
+        DBHandler db = new DBHandler(this);
+        db.addRestaurant(new Restaurant("Bumbledee's at 1938", " B07 Rumah Tetamu, Universiti Sains Malaysia, Penang Island 11700, Malaysia"));
+        db.addRestaurant(new Restaurant("KFC", "559 & 559A, Jalan Taman Sri Saujana,, Sungai Dua, 11700 George Town, Pulau Pinang"));
+        db.addRestaurant(new Restaurant("McDonald's", "4 B-C-D, Jalan Sungai Dua, 11700 Gelugor, Pulau Pinang"));
+        db.addRestaurant(new Restaurant("Restaurant Kim Hin ", "MK 13, 674C, Jalan Sungai Dua, Taman Pekaka, 11700 Gelugor, Pulau Pinang"));
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             checkLocationPermission();
         }
