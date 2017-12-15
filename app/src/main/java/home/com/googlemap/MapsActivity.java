@@ -1,18 +1,14 @@
 package home.com.googlemap;
 
-import android.*;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
-import android.location.Address;
-import android.location.Geocoder;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -67,7 +63,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private GoogleApiClient client;
-    private Location lastLocation;
     private Marker currentLocationMarker;
     public static final String TAG = MapsActivity.class.getSimpleName();
     public static final int REQUEST_PERMISSION_CODE = 99;
@@ -75,12 +70,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DBHelper mydb;
     ArrayList<Marker> mapMarkers = new ArrayList<Marker>();
 
+    double longitude = 0;
+    double latitude = 0;
+    String callNo = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sliding_layout);
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
 
@@ -88,32 +87,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        FloatingActionButton randomFill = (FloatingActionButton) findViewById(R.id.randomFilters);
-        randomFill.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                int randomNum = new Random().nextInt(mydb.numberOfRows());
-                // retrieve the name of the marker and match it in the database
-                // display it all out in the
-                Cursor rs = mydb.getData(randomNum);
-                rs.moveToFirst();
-                String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
+        mydb = new DBHelper(this);
+        if (mydb.numberOfRows() < 1) {
+            insertData();
+        }
 
-                Marker found = null;
-                for(Marker m : mapMarkers){
-                    if(m.getTitle() == getName){
-                        found = m;
-                    }
-                }
-                if(found!=null){
-                   mMap.moveCamera(CameraUpdateFactory.newLatLng(found.getPosition()));
-//                    mMap.animateCamera(CameraUpdateFactory.zoomBy(14));
-//                    found.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                }
-                setDetails(getName);
-
-            }
-        });
+        setEmptyDetails();
 
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         mLayout.setFadeOnClickListener(new View.OnClickListener() {
@@ -123,20 +102,56 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        FloatingActionButton randomFill = (FloatingActionButton) findViewById(R.id.randomFilters);
+        randomFill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int randomNum = new Random().nextInt(mydb.numberOfRows());
+                // retrieve the name of the marker and match it in the database
+                // display it all out in the
+                if (randomNum == 0) {
+                    randomNum++;
+                }
+
+                Cursor rs = mydb.getData(randomNum);
+                rs.moveToFirst();
+                String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
+                Marker found = null;
+                for (Marker m : mapMarkers) {
+                    if (m.getTitle() == getName) {
+                        found = m;
+                    }
+                }
+
+//                if(found!=null){
+//                    currentLocationMarker = found;
+//                    mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocationMarker.getPosition()));
+//                    mMap.animateCamera(CameraUpdateFactory.newLatLng(currentLocationMarker.getPosition()));
+//                    found.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+//                }
+                setDetails(rs);
+
+                if (mLayout != null) {
+                    mLayout.setAnchorPoint(0.7f);
+                    mLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+                }
+                Toast.makeText(getApplicationContext(), "We randomly chose for you!", Toast.LENGTH_LONG).show();
+            }
+        });
+
         Button callB = (Button) findViewById(R.id.callButton);
         callB.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
-                // example
-                String phoneNo = "017-5818160";
-                if(!phoneNo.isEmpty()){
+
+                if (!callNo.isEmpty()) {
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:" + phoneNo)); // get the phone number from the phone number area.
+                    callIntent.setData(Uri.parse("tel:" + callNo)); // get the phone number from the phone number area.
 
                     if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                         return;
                     }
                     startActivity(callIntent);
-                } else if (phoneNo.isEmpty()){ // reject the user from calling without phone number input.
+                } else if (callNo.isEmpty()) { // reject the user from calling without phone number input.
                     Toast.makeText(getApplicationContext(), "Invalid phone number", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -144,48 +159,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Button uberB = (Button) findViewById(R.id.transportButton);
         uberB.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View arg0){
+            public void onClick(View arg0) {
                 PackageManager pm = getPackageManager();
-                try {
-                    pm.getPackageInfo("com.ubercab", PackageManager.GET_ACTIVITIES);
-                    // example
-                    double longitude = 100.302518;
-                    double latitude = 5.355934;
-                    String uri = "uber://?client_id=<CLIENT_ID>" +
-                            "&action=setPickup&pickup=my_location&pickup[nickname]=You" +
-                            "&dropoff[latitude]="+latitude+"&dropoff[longitude]="+longitude+"&dropoff[nickname]=Destination" +
-                            "&product_id=a1111c8c-c720-46c3-8534-2fcdd730040d" +
-                            "&link_text=View%20team%20roster" +
-                            "&partner_deeplink=partner%3A%2F%2Fteam%2F9383";
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(uri));
-                    startActivity(intent);
-                } catch (PackageManager.NameNotFoundException e) {
+                if (latitude != 0 && longitude != 0) {
                     try {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.ubercab")));
-                    } catch (ActivityNotFoundException anfe) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.ubercab")));
+                        pm.getPackageInfo("com.ubercab", PackageManager.GET_ACTIVITIES);
+                        // example
+                        String uri = "uber://?client_id=<CLIENT_ID>" +
+                                "&action=setPickup&pickup=my_location&pickup[nickname]=You" +
+                                "&dropoff[latitude]=" + latitude + "&dropoff[longitude]=" + longitude + "&dropoff[nickname]=Destination" +
+                                "&product_id=a1111c8c-c720-46c3-8534-2fcdd730040d" +
+                                "&link_text=View%20team%20roster" +
+                                "&partner_deeplink=partner%3A%2F%2Fteam%2F9383";
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(uri));
+                        startActivity(intent);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        try {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.ubercab")));
+                        } catch (ActivityNotFoundException anfe) {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.ubercab")));
+                        }
                     }
+                } else if (latitude == 0 && longitude == 0) {
+                    Toast.makeText(getApplicationContext(), "Invalid Location", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-    }
-
-    public void setDetails(String name){
-        //Text views set to defaults for design purposes
-        TextView rn = (TextView) findViewById(R.id.restaurantName);
-        rn.setText(name);
-        ImageView ri = (ImageView)findViewById(R.id.restaurantImage);
-
-        TextView operatingDaysStart = (TextView) findViewById(R.id.operatingDaysField_Start);
-        operatingDaysStart.setText("Wednesday");
-        TextView operatingDaysEnd = (TextView) findViewById(R.id.operatingDaysField_End);
-        operatingDaysEnd.setText("Wednesday");
-        TextView operatingHoursStart = (TextView) findViewById(R.id.operatingHoursField_Start);
-        operatingHoursStart.setText("88:88");
-        TextView operatingHoursEnd = (TextView) findViewById(R.id.operatingHoursField_End);
-        operatingHoursEnd.setText("88:88");
     }
 
     /**
@@ -207,13 +208,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        switch(requestCode){
+        switch (requestCode) {
             case REQUEST_PERMISSION_CODE:
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission granted
-                    if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                    if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-                        if(client == null){
+                        if (client == null) {
                             buildingGoogleApiClient();
                         }
                         mMap.setMyLocationEnabled(true);
@@ -224,6 +225,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
         }
     }
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -237,7 +239,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-        LatLngBounds USM = new LatLngBounds(new LatLng(5.326039,100.272603),new LatLng(5.370049,100.317664));
+        LatLngBounds USM = new LatLngBounds(new LatLng(5.326039, 100.272603), new LatLng(5.370049, 100.317664));
         mMap.setLatLngBoundsForCameraTarget(USM);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(USM.getCenter(), 10));
         mMap.setMinZoomPreference(14.0f);
@@ -249,93 +251,70 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 buildingGoogleApiClient();
                 mMap.setMyLocationEnabled(true);
             }
-        }
-        else {
+        } else {
             buildingGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
 
         setUpMap();
 
-        mydb = new DBHelper(this);
-
-        mydb.insertRestaurant("Bumbledee's at 1938", "Western", "0.8", "MON - FRI", "SAT - SUN", "9:00 - 20:00","$$", "+60 19-473 3777",
-                "B07 Rumah Tetamu,Universiti Sains Malaysia, Penang Island 11700, Malaysia","5.3620769", " 100.306943888888");
-
-
-        for(int i=1;i<=mydb.numberOfRows();i++){
+        for (int i = 1; i <= mydb.numberOfRows(); i++) {
             Cursor rs = mydb.getData(i);
             rs.moveToFirst();
             String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
-            String getCuisine = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_CUISINE));
-            String getDistance = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_DISTANCE));
-            String getWork = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_WORK));
-            String getRest = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_REST));
-            String getTime = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_TIME));
-            String getPrice = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_PRICE));
-            String getContact = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_CONTACT));
-            String getAddress = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_ADRRESS));
             String getLat = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LATITUDE));
             String getLongi = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LONGITUDE));
-            if (!rs.isClosed())  {
+            String getType = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_FOODTYPE));
+            if (!rs.isClosed()) {
                 rs.close();
             }
-            addMarker(i,getName,getLat,getLongi);
+            addMarker(i, getName, getLat, getLongi, getType);
         }
 
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener(){
-            @Override
-            public boolean onMarkerClick(Marker currentM) {
-                Toast.makeText(getApplicationContext(),currentM.getTag().toString(),Toast.LENGTH_LONG).show();
-                currentM.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                Cursor rs = mydb.getData(Integer.parseInt(currentM.getTag().toString()));
-                rs.moveToFirst();
-                String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
-                setDetails(getName);
-                // change marker colour
-                // get id then
-                // getData(name, time, address, price)
-                // create the function above
-                return false;
-            }
-        }
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                                          @Override
+                                          public boolean onMarkerClick(Marker currentM) {
+                                              if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED
+                                                      || mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                                                  mLayout.setAnchorPoint(1.0f);
+                                                  mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                                              }
+                                              int i;
+                                              for (i = 0; i < mapMarkers.size(); i++) {
+                                                  if (currentM.getTitle() == mapMarkers.get(i).getTitle()) {
+                                                      break;
+                                                  }
+                                              }
+
+                                              if (i <= mydb.numberOfRows()) {
+                                                  Toast.makeText(getApplicationContext(), "Scroll Up For More", Toast.LENGTH_LONG).show();
+                                                  currentM.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                                                  Cursor rs = mydb.getData(i);
+                                                  rs.moveToFirst();
+                                                  setDetails(rs);
+                                                  getLatLngCallNo(rs);
+                                                  // change marker colour
+                                                  // get id then
+                                                  // getData(name, time, address, price)
+                                                  // create the function above
+                                              }
+                                              return false;
+                                          }
+                                      }
         );
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                setDetails("");
+                if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED|| mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    mLayout.setAnchorPoint(1.0f);
+                    mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                }
+                setEmptyDetails();
                 // there is orange, red, yellow marker,
                 // then change all to default colour.
             }
         });
-
-//        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//
-//            buildingGoogleApiClient();
-//            mMap.setMyLocationEnabled(true);
-//
-//        }
-
-        }
-
-    public void addMarker(int id, String name, String lat, String longi){
-        // need latitude, longitude, id
-
-        LatLng latlng = new LatLng(Double.parseDouble(lat),Double.parseDouble(longi));
-        MarkerOptions markerOptions = new MarkerOptions().position(latlng).title(name);
-
-        String cuisineType = "-";
-        if(cuisineType.matches("Halal")){
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        } else if(cuisineType.matches("Non-halal")){
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-        } else
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-
-        currentLocationMarker = mMap.addMarker(markerOptions);
-        currentLocationMarker.setTag(id);
-        mapMarkers.add(mMap.addMarker(markerOptions));
     }
 
     protected synchronized void buildingGoogleApiClient() {
@@ -352,13 +331,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onLocationChanged(Location location) {
         //handleNewLocation(location);
-        lastLocation = location;
 
-        if(currentLocationMarker!= null){
+        if (currentLocationMarker != null) {
             currentLocationMarker.remove();
         }
 
-        LatLng latlng = new LatLng(location.getLatitude(),location.getLongitude());
+        LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions().position(latlng).title("You are here!");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
@@ -367,19 +345,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
         mMap.animateCamera(CameraUpdateFactory.zoomBy(10));
 
-        if(client!= null){
-            LocationServices.FusedLocationApi.removeLocationUpdates(client,this);
+        if (client != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(client, this);
         }
     }
 
-    public void handleNewLocation(Location location){
-        lastLocation = location;
+    public void handleNewLocation(Location location) {
 
-        if(currentLocationMarker!= null){
+        if (currentLocationMarker != null) {
             currentLocationMarker.remove();
         }
 
-        LatLng latlng = new LatLng(location.getLatitude(),location.getLongitude());
+        LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions().position(latlng).title("You are here!");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
@@ -388,53 +365,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
         mMap.animateCamera(CameraUpdateFactory.zoomBy(10));
 
-        if(client!= null){
-            LocationServices.FusedLocationApi.removeLocationUpdates(client,this);
+        if (client != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(client, this);
         }
     }
-
-    /*public void onClick(View view){
-
-        switch (view.getId()){
-            case R.id.searchButton:
-                EditText editSearch = findViewById(R.id.editSearch);
-                String location = editSearch.getText().toString();
-
-                List<Address> addressList;
-
-                if(!location.equals("")){
-                    Geocoder geocoder = new Geocoder(this);
-                    try {
-                        addressList = geocoder.getFromLocationName(location,10);
-
-                        for(int i = 0; i < addressList.size() ; i++){
-
-                            LatLng latLng = new LatLng(addressList.get(i).getLatitude() , addressList.get(i).getLongitude());
-
-                            MarkerOptions markerOptions = new MarkerOptions();
-                            markerOptions.position(latLng);
-                            markerOptions.title(location);
-                            mMap.addMarker(markerOptions);
-                            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                            mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-
-                }
-        }
-
-    }*/
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         LocationRequest locationRequest = LocationRequest.create();
 
-        locationRequest.setInterval(30*1000);
-        locationRequest.setFastestInterval(5*1000);
+        locationRequest.setInterval(30 * 1000);
+        locationRequest.setFastestInterval(5 * 1000);
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
@@ -485,9 +426,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        Log.i(TAG, "Location services connected.");
     }
 
-    public boolean checkLocationPermission(){
+    public boolean checkLocationPermission() {
 
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_CODE);
@@ -495,15 +436,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_CODE);
             }
             return false;
-        }else
+        } else
             return true;
     }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//      //  client.connect();
-//    }
 
     @Override
     protected void onPause() {
@@ -536,7 +471,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onBackPressed() {
         if (mLayout != null &&
-                (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)) {
+                (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED || mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
             mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -557,15 +492,120 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    public void getLatLngCallNo(Cursor restaurant) {
+
+        latitude = Double.parseDouble(restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LATITUDE)));
+        longitude = Double.parseDouble(restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LONGITUDE)));
+        callNo = restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_CONTACT));
+
+    }
+
+    public void addMarker(int id, String name, String lat, String longi, String type) {
+        // need latitude, longitude, id
+
+        LatLng latlng = new LatLng(Double.parseDouble(lat), Double.parseDouble(longi));
+        MarkerOptions markerOptions = new MarkerOptions().position(latlng).title(name);
+
+        if (type.matches("Halal")) {
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        } else if (type.matches("Non-halal")) {
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+        } else
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+
+        currentLocationMarker = mMap.addMarker(markerOptions);
+        mapMarkers.add(mMap.addMarker(markerOptions));
+    }
+
+    public void setDetails(Cursor restaurant) {
+        //Text views set to defaults for design purposes
+        TextView rn = (TextView) findViewById(R.id.restaurantName);
+        rn.setText(restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME)));
+
+        String uri = "@drawable/" + restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_IMAGENAME));
+        int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+        Drawable res = getResources().getDrawable(imageResource);
+        ImageView ri = (ImageView) findViewById(R.id.restaurantImage);
+        ri.setImageDrawable(res);
+
+        TextView operatingDaysStart = (TextView) findViewById(R.id.operatingDaysField_Start);
+        operatingDaysStart.setText(restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_WORK)));
+
+//        TextView operatingDaysEnd = (TextView) findViewById(R.id.operatingDaysField_End);
+//        operatingDaysEnd.setText(restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_REST)));
+
+        TextView operatingHoursStart = (TextView) findViewById(R.id.operatingHoursField_Start);
+        operatingHoursStart.setText(restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_TIME)));
+
+//        TextView operatingHoursEnd = (TextView) findViewById(R.id.operatingHoursField_End);
+//        operatingHoursEnd.setText("88:88");
+
+        TextView address = (TextView) findViewById(R.id.address);
+        address.setText(restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_ADDRESS)));
+
+        TextView contact = (TextView) findViewById(R.id.contact);
+        contact.setText(restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_CONTACT)));
+
+        TextView price = (TextView) findViewById(R.id.price);
+        price.setText(restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_PRICE)));
+    }
+
+    public void setEmptyDetails() {
+        TextView rn = (TextView) findViewById(R.id.restaurantName);
+        rn.setText("Restaurant Name");
+
+        ImageView ri = (ImageView) findViewById(R.id.restaurantImage);
+        ri.setImageDrawable(null);
+
+        TextView operatingDaysStart = (TextView) findViewById(R.id.operatingDaysField_Start);
+        operatingDaysStart.setText("NOT AVAILABLE");
+
+//        TextView operatingDaysEnd = (TextView) findViewById(R.id.operatingDaysField_End);
+//        operatingDaysEnd.setText("");
+
+        TextView operatingHoursStart = (TextView) findViewById(R.id.operatingHoursField_Start);
+        operatingHoursStart.setText("NOT AVAILABLE");
+
+//        TextView operatingHoursEnd = (TextView) findViewById(R.id.operatingHoursField_End);
+//        operatingHoursEnd.setText("");
+        TextView address = (TextView) findViewById(R.id.address);
+        address.setText("NOT AVAILABLE");
+
+        TextView contact = (TextView) findViewById(R.id.contact);
+        contact.setText("NOT AVAILABLE");
+
+        TextView price = (TextView) findViewById(R.id.price);
+        price.setText("");
+
+        callNo = "";
+        latitude = 0;
+        longitude = 0;
+    }
+
     private void setUpMap() {
-        if (checkLocationPermission())
-        {
+        if (checkLocationPermission()) {
             UiSettings mUiSettings = mMap.getUiSettings();
             mMap.setMyLocationEnabled(true);
             mUiSettings.setMyLocationButtonEnabled(true);
             mUiSettings.setTiltGesturesEnabled(true);
             mUiSettings.setRotateGesturesEnabled(false);
         }
+    }
+
+    public void insertData(){
+        mydb.insertRestaurant("Bumbledee's at 1938",
+                "Western",
+                "0.8",
+                "MON - FRI",
+                "SAT - SUN",
+                "9:00 - 20:00",
+                "$$$",
+                "+60 19-473 3777",
+                "B07 Rumah Tetamu,Universiti Sains Malaysia, Penang Island 11700, Malaysia",
+                "5.3620769",
+                "100.306943888888",
+                "bumbledee",
+                "Halal");
     }
 
 }

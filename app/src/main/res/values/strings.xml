@@ -2,4 +2,6 @@
     <string name="app_name">Food Locator</string>
     <string name="title_activity_maps">Food Locator</string>
     <string name="title_activity_test">Test</string>
+    <string name="uber">Uber</string>
+    <string name="call">Call</string>
 </resources>

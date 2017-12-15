@@ -27,9 +27,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String RESTAURANT_COLUMN_TIME= "time";
     public static final String RESTAURANT_COLUMN_PRICE= "price";
     public static final String RESTAURANT_COLUMN_CONTACT= "contact";
-    public static final String RESTAURANT_COLUMN_ADRRESS= "address";
+    public static final String RESTAURANT_COLUMN_ADDRESS = "address";
     public static final String RESTAURANT_COLUMN_LATITUDE = "latitude";
     public static final String RESTAURANT_COLUMN_LONGITUDE = "longitude";
+    public static final String RESTAURANT_COLUMN_IMAGENAME = "imagename";
+    public static final String RESTAURANT_COLUMN_FOODTYPE = "foodtype";
 
     private HashMap hp;
 
@@ -41,19 +43,19 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db){
         db.execSQL("create table restaurant" + "(id integer primary key, name text,cuisine text," +
                 "distance real, work blob, rest blob, time text, price blob, contact text," +
-                " address blob, latitude real, longitude real)");
+                " address blob, latitude real, longitude real, imagename text, foodtype text)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
 
-        db.execSQL("DROP TABLE IF EXISTS contacts");
+        db.execSQL("DROP TABLE IF EXISTS restaurant");
         onCreate(db);
     }
 
     public boolean insertRestaurant (String name, String cuisine, String distance, String work,
                                      String rest, String time, String price, String contact,
-                                     String address, String latitude, String longitude){
+                                     String address, String latitude, String longitude, String imagename, String foodtype){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("name",name);
@@ -67,6 +69,8 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("address",address);
         contentValues.put("latitude",latitude);
         contentValues.put("longitude",longitude);
+        contentValues.put("imagename",imagename);
+        contentValues.put("foodtype",foodtype);
         db.insert("restaurant",null,contentValues);
         return true;
     }
@@ -79,31 +83,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public int numberOfRows(){
         SQLiteDatabase db = this.getReadableDatabase();
-        int numRows = (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);
-        return numRows;
-    }
-
-    public boolean updateContact (Integer id, String name, String phone, String email, String homepage){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("name",name);
-        contentValues.put("phone",phone);
-        contentValues.put("email",email);
-        contentValues.put("homepage",homepage);
-        db.update("contacts",contentValues,"id= ?",new String[]{Integer.toString(id)});
-        return true;
-    }
-
-    public void deleteContact (Integer id){
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete("contacts","id= ?",new String[]{Integer.toString(id)});
-
-        while(id < numberOfRows()+1){
-            ContentValues contentValues = new ContentValues();
-            contentValues.put("id", id);
-            db.update("contacts", contentValues, "id = ? ", new String[] { Integer.toString(id + 1)});
-            id++;
-        }
+        return (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);
     }
 
     public ArrayList<String> getAllContacts(){
