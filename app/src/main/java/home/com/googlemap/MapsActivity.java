@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
@@ -53,6 +54,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -70,20 +72,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final String TAG = MapsActivity.class.getSimpleName();
     public static final int REQUEST_PERMISSION_CODE = 99;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    final DBHandler dbHandler = new DBHandler(this);
+    private DBHelper mydb;
+    ArrayList<Marker> mapMarkers = new ArrayList<Marker>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sliding_layout);
 
-
-        dbHandler.addRestaurant(new Restaurant("Bumbledee's at 1938", " 100.306943888888", "5.3620769"));
-        dbHandler.addRestaurant(new Restaurant("KFC", "100.3035279","5.3524329"));
-        dbHandler.addRestaurant(new Restaurant("McDonald's", "100.299399","5.3525673"));
-        dbHandler.addRestaurant(new Restaurant("Restaurant Kim Hin ", "100.298094399999","5.35150939999999"));
-        dbHandler.addRestaurant(new Restaurant("USM","100.302518","5.355934"));
-        
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             checkLocationPermission();
         }
@@ -96,16 +92,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         randomFill.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                int randomNum = new Random().nextInt(dbHandler.getRestaurantCount() + 1);
+                int randomNum = new Random().nextInt(mydb.numberOfRows());
                 // retrieve the name of the marker and match it in the database
                 // display it all out in the
+                Cursor rs = mydb.getData(randomNum);
+                rs.moveToFirst();
+                String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
+
+                Marker found = null;
+                for(Marker m : mapMarkers){
+                    if(m.getTitle() == getName){
+                        found = m;
+                    }
+                }
+                if(found!=null){
+                   mMap.moveCamera(CameraUpdateFactory.newLatLng(found.getPosition()));
+//                    mMap.animateCamera(CameraUpdateFactory.zoomBy(14));
+//                    found.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                }
+                setDetails(getName);
+
             }
         });
 
-        setDetails();
-
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
-
         mLayout.setFadeOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -162,10 +172,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    public void setDetails(){
+    public void setDetails(String name){
         //Text views set to defaults for design purposes
         TextView rn = (TextView) findViewById(R.id.restaurantName);
-        rn.setText("Restaurant Name");
+        rn.setText(name);
         ImageView ri = (ImageView)findViewById(R.id.restaurantImage);
 
         TextView operatingDaysStart = (TextView) findViewById(R.id.operatingDaysField_Start);
@@ -247,14 +257,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         setUpMap();
-        for(int i=1;i<dbHandler.getRestaurantCount()-1;i++){
-            addMarker(i);
+
+        mydb = new DBHelper(this);
+
+        mydb.insertRestaurant("Bumbledee's at 1938", "5.3620769", " 100.306943888888");
+        mydb.insertRestaurant("KFC","5.3524329", "100.3035279");
+        mydb.insertRestaurant("McDonald's","5.3525673", "100.299399");
+        mydb.insertRestaurant("Restaurant Kim Hin ","5.35150939999999", "100.298094399999");
+
+        for(int i=1;i<=mydb.numberOfRows();i++){
+            Cursor rs = mydb.getData(i);
+            rs.moveToFirst();
+            String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
+            String getLat = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LAT));
+            String getLongi = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LONG));
+            if (!rs.isClosed())  {
+                rs.close();
+            }
+            addMarker(i,getName,getLat,getLongi);
         }
+
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener(){
             @Override
             public boolean onMarkerClick(Marker currentM) {
                 Toast.makeText(getApplicationContext(),currentM.getTag().toString(),Toast.LENGTH_LONG).show();
                 currentM.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                Cursor rs = mydb.getData(Integer.parseInt(currentM.getTag().toString()));
+                rs.moveToFirst();
+                String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
+                setDetails(getName);
                 // change marker colour
                 // get id then
                 // getData(name, time, address, price)
@@ -267,6 +298,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
+                setDetails("");
                 // there is orange, red, yellow marker,
                 // then change all to default colour.
             }
@@ -281,12 +313,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
 
-    public void addMarker(int id){
+    public void addMarker(int id, String name, String lat, String longi){
         // need latitude, longitude, id
-        DBHandler db = new DBHandler(this);
-        Restaurant r = db.getData(id);
-        LatLng latlng = new LatLng(Integer.parseInt(r.getLatitude()),Integer.parseInt(r.getLongitude()));
-        MarkerOptions markerOptions = new MarkerOptions().position(latlng).title(r.getName());
+
+        LatLng latlng = new LatLng(Double.parseDouble(lat),Double.parseDouble(longi));
+        MarkerOptions markerOptions = new MarkerOptions().position(latlng).title(name);
 
         String cuisineType = "-";
         if(cuisineType.matches("Halal")){
@@ -298,6 +329,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         currentLocationMarker = mMap.addMarker(markerOptions);
         currentLocationMarker.setTag(id);
+        mapMarkers.add(mMap.addMarker(markerOptions));
     }
 
     protected synchronized void buildingGoogleApiClient() {
