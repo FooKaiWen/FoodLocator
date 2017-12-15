@@ -20,8 +20,16 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String CONTACTS_TABLE_NAME = "restaurant";
     public static final String RESTAURANT_COLUMN_ID = "id";
     public static final String RESTAURANT_COLUMN_NAME = "name";
-    public static final String RESTAURANT_COLUMN_LAT = "latitude";
-    public static final String RESTAURANT_COLUMN_LONG = "longitude";
+    public static final String RESTAURANT_COLUMN_CUISINE = "cuisine";
+    public static final String RESTAURANT_COLUMN_DISTANCE = "distance";
+    public static final String RESTAURANT_COLUMN_WORK = "work";
+    public static final String RESTAURANT_COLUMN_REST= "rest";
+    public static final String RESTAURANT_COLUMN_TIME= "time";
+    public static final String RESTAURANT_COLUMN_PRICE= "price";
+    public static final String RESTAURANT_COLUMN_CONTACT= "contact";
+    public static final String RESTAURANT_COLUMN_ADRRESS= "address";
+    public static final String RESTAURANT_COLUMN_LATITUDE = "latitude";
+    public static final String RESTAURANT_COLUMN_LONGITUDE = "longitude";
 
     private HashMap hp;
 
@@ -31,7 +39,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db){
-        db.execSQL("create table restaurant" + "(id integer primary key, name text, latitude real, longitude real)");
+        db.execSQL("create table restaurant" + "(id integer primary key, name text,cuisine text," +
+                "distance real, work blob, rest blob, time text, price blob, contact text," +
+                " address blob, latitude real, longitude real)");
     }
 
     @Override
@@ -41,10 +51,20 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertRestaurant (String name, String latitude, String longitude){
+    public boolean insertRestaurant (String name, String cuisine, String distance, String work,
+                                     String rest, String time, String price, String contact,
+                                     String address, String latitude, String longitude){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("name",name);
+        contentValues.put("cuisine",cuisine);
+        contentValues.put("distance",distance);
+        contentValues.put("work",work);
+        contentValues.put("rest",rest);
+        contentValues.put("time",time);
+        contentValues.put("price",price);
+        contentValues.put("contact",contact);
+        contentValues.put("address",address);
         contentValues.put("latitude",latitude);
         contentValues.put("longitude",longitude);
         db.insert("restaurant",null,contentValues);
@@ -90,7 +110,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ArrayList<String>   array_List = new ArrayList<String>();
         hp = new HashMap();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("select * from contacts order by id",null);
+        Cursor res = db.rawQuery("select * from restaurant order by id",null);
         res.moveToFirst();
 
         while(!res.isAfterLast()){

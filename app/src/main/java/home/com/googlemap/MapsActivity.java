@@ -227,8 +227,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
+     * This is where we can add markers or lines, add listeners or move the camera.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
@@ -260,17 +259,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mydb = new DBHelper(this);
 
-        mydb.insertRestaurant("Bumbledee's at 1938", "5.3620769", " 100.306943888888");
-        mydb.insertRestaurant("KFC","5.3524329", "100.3035279");
-        mydb.insertRestaurant("McDonald's","5.3525673", "100.299399");
-        mydb.insertRestaurant("Restaurant Kim Hin ","5.35150939999999", "100.298094399999");
+        mydb.insertRestaurant("Bumbledee's at 1938", "Western", "0.8", "MON - FRI", "SAT - SUN", "9:00 - 20:00","$$", "+60 19-473 3777",
+                "B07 Rumah Tetamu,Universiti Sains Malaysia, Penang Island 11700, Malaysia","5.3620769", " 100.306943888888");
+
 
         for(int i=1;i<=mydb.numberOfRows();i++){
             Cursor rs = mydb.getData(i);
             rs.moveToFirst();
             String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
-            String getLat = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LAT));
-            String getLongi = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LONG));
+            String getCuisine = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_CUISINE));
+            String getDistance = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_DISTANCE));
+            String getWork = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_WORK));
+            String getRest = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_REST));
+            String getTime = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_TIME));
+            String getPrice = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_PRICE));
+            String getContact = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_CONTACT));
+            String getAddress = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_ADRRESS));
+            String getLat = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LATITUDE));
+            String getLongi = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LONGITUDE));
             if (!rs.isClosed())  {
                 rs.close();
             }
