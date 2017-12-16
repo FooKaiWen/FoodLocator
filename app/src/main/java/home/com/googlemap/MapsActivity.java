@@ -607,6 +607,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 "MON-SUN", "N/A", "11:00 - 23:00","$-$$", "1-300-88-2525",
                 "Desa University, 4, Jalan Sungai Dua, 11700, Pulau Pinang",
                 "5.356226", "100.298586", "pizza_hut_sungai_dua", "Halal");
+
+        mydb.insertRestaurant("The Kapit's", "Western", "0.6 km",
+                "MON-SUN", "N/A", "10:00 - 0:00", "$-$$", "+60 13-499 9507",
+                "8, Jalan Gemilang, 11800 Gelugor, Pulau Pinang",
+                "5.360808", "100.303539", "the_kapit's", "Halal");
+
     }
 
 }
