@@ -5,10 +5,21 @@
     <string name="uber">Uber</string>
     <string name="call">Call</string>
     <string-array name="cuisine_array">
-        <item>All Cuisine Type</item>
-        <item>Western</item>
+        <item>All Cuisine</item>
+        <item>African</item>
         <item>Cafe</item>
-        <item>Japanese</item>
+        <item>Chinese</item>
         <item>Fast Food</item>
+        <item>Hawker Stall</item>
+        <item>Japanese</item>
+        <item>Malay</item>
+        <item>Multi-Cuisine</item>
+        <item>Western</item>
+    </string-array>
+    <string-array name="price_array">
+        <item>All Price</item>
+        <item>$</item>
+        <item>$$</item>
+        <item>$$$</item>
     </string-array>
 </resources>

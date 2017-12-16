@@ -43,7 +43,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db){
         db.execSQL("create table restaurant" + "(id integer primary key, name blob,cuisine text," +
                 "distance blob, work blob, rest blob, time text, price blob, contact text," +
-                " address blob, latitude real, longitude real, imagename text, foodtype text)");
+                " address blob, latitude blob, longitude blob, imagename text, foodtype text)");
     }
 
     @Override

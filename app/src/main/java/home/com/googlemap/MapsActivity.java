@@ -76,8 +76,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     double longitude = 0;
     double latitude = 0;
     String callNo = "";
-    Spinner spinner;
-    String spinnerChoice = "All Cuisine Type";
+    Spinner cuisineSpinner;
+    Spinner priceSpinner;
+    String cuisineChoice = "All Cuisine";
+    String priceChoice = "All Price";
+    int randomNum = 1;
+    int lastrandomNum = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,14 +103,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         setEmptyDetails();
 
-        spinner = (Spinner) findViewById(R.id.spinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.cuisine_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
+        cuisineSpinner = (Spinner) findViewById(R.id.cuisineSpinner);
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.cuisine_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
+        cuisineSpinner.setAdapter(adapter);
+
+        priceSpinner = (Spinner) findViewById(R.id.priceSpinner);
+        final ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.price_array, android.R.layout.simple_spinner_item);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        priceSpinner.setAdapter(adapter2);
 
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         mLayout.setFadeOnClickListener(new View.OnClickListener() {
@@ -123,18 +128,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Cursor rs1;
                 Cursor rs;
                 String randomCuisine;
-                if (!spinnerChoice.equals("All Cuisine Type")) {
-                        int randomNum = new Random().nextInt(mydb.numberOfRows());
+                if (!cuisineChoice.equals("All Cuisine")) {
+                    for(int k = 1 ; k <= mydb.numberOfRows() ; k++) {
+                        lastrandomNum = randomNum;
+                        randomNum = new Random().nextInt(mydb.numberOfRows());
                         if (randomNum == 0) {
                             randomNum++;
                         }
                         rs1 = mydb.getData(randomNum);
                         rs1.moveToFirst();
                         randomCuisine = rs1.getString(rs1.getColumnIndex(DBHelper.RESTAURANT_COLUMN_CUISINE));
-                        if(randomCuisine.equals(spinnerChoice)){
+                        if (randomCuisine.equals(cuisineChoice)) {
                             setDetails(rs1);
+                            Toast.makeText(getApplicationContext(), "We randomly chose for you!", Toast.LENGTH_LONG).show();
+                            anchorThePane();
+                            break;
+                        }
+                        if(rs1.isNull(0)){
+                            Toast.makeText(getApplicationContext(), "No restaurant found!", Toast.LENGTH_LONG).show();
+                            break;
                         }
                         rs1.close();
+                    }
                 } else {
                     int randomNum = new Random().nextInt(mydb.numberOfRows());
                     if (randomNum == 0) {
@@ -142,45 +157,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                     rs = mydb.getData(randomNum);
                     rs.moveToFirst();
-//                    String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
                     setDetails(rs);
+                    Toast.makeText(getApplicationContext(), "We randomly chose for you!", Toast.LENGTH_LONG).show();
+                    anchorThePane();
                 }
-
-
-//                Marker found = null;
-//                int i;
-//                for (i = 0; i < mapMarkers.size(); i++) {
-//                    if (getName == mapMarkers.get(i).getTitle()) {
-//                        Toast.makeText(getApplicationContext(),Integer.toString(i),Toast.LENGTH_LONG).show();
-//                        break;
-//                    }
-//                }
-//                if (i <= mydb.numberOfRows()) {
-////                    Toast.makeText(getApplicationContext(), "Scroll Up For More", Toast.LENGTH_LONG).show();
-//                    Cursor rs1 = mydb.getData(i);
-//                    rs1.moveToFirst();
-////                    setDetails(rs1);
-////                    getLatLngCallNo(rs1);
-//                }
-
-
-
-                if (mLayout != null) {
-                    mLayout.setAnchorPoint(0.7f);
-                    mLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
-                }
-                Toast.makeText(getApplicationContext(), "We randomly chose for you!", Toast.LENGTH_LONG).show();
             }
         });
 
         Button callB = (Button) findViewById(R.id.callButton);
         callB.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
-
                 if (!callNo.isEmpty()) {
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
                     callIntent.setData(Uri.parse("tel:" + callNo)); // get the phone number from the phone number area.
-
                     if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                         return;
                     }
@@ -220,7 +209,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
-
     }
 
     /**
@@ -292,13 +280,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         setUpMap();
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+
+        cuisineSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                if (!adapterView.getSelectedItem().toString().matches("All Cuisine Type")) {
+                if (!adapterView.getSelectedItem().toString().matches("All Cuisine")) {
                     mMap.clear();
-                    spinnerChoice = adapterView.getSelectedItem().toString();
+                    cuisineChoice = adapterView.getSelectedItem().toString();
                     for (int p = 1; p <= mydb.numberOfRows(); p++) {
                         Cursor rs = mydb.getData(p);
                         rs.moveToFirst();
@@ -315,7 +305,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 } else {
                     mMap.clear();
-                    spinnerChoice = adapterView.getSelectedItem().toString();
+                    cuisineChoice = adapterView.getSelectedItem().toString();
                     if(!mapMarkers.isEmpty()){
                         for (int p = 0; p < mapMarkers.size(); p++) {
                             mapMarkers.remove(p);
@@ -337,7 +327,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+                for (int k = 1; k <= mydb.numberOfRows(); k++) {
+                    Cursor rs = mydb.getData(k);
+                    rs.moveToFirst();
+                    String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
+                    String getLat = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LATITUDE));
+                    String getLongi = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LONGITUDE));
+                    String getType = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_FOODTYPE));
+                    if (!rs.isClosed()) {
+                        rs.close();
+                    }
+                    addMarker(k, getName, getLat, getLongi, getType);
+                }
             }
         });
 
@@ -589,7 +590,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         TextView rn = (TextView) findViewById(R.id.restaurantName);
         rn.setText(restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME)));
 
-        String uri = "@drawable/restaurant_image/" + restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_IMAGENAME));
+        String uri = "@drawable/" + restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_IMAGENAME));
         int imageResource = getResources().getIdentifier(uri, null, getPackageName());
         Drawable res = getResources().getDrawable(imageResource);
         ImageView ri = (ImageView) findViewById(R.id.restaurantImage);
@@ -598,14 +599,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         TextView operatingDaysStart = (TextView) findViewById(R.id.operatingDaysField_Start);
         operatingDaysStart.setText(restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_WORK)));
 
-//        TextView operatingDaysEnd = (TextView) findViewById(R.id.operatingDaysField_End);
-//        operatingDaysEnd.setText(restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_REST)));
-
         TextView operatingHoursStart = (TextView) findViewById(R.id.operatingHoursField_Start);
         operatingHoursStart.setText(restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_TIME)));
-
-//        TextView operatingHoursEnd = (TextView) findViewById(R.id.operatingHoursField_End);
-//        operatingHoursEnd.setText("88:88");
 
         TextView address = (TextView) findViewById(R.id.address);
         address.setText(restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_ADDRESS)));
@@ -627,14 +622,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         TextView operatingDaysStart = (TextView) findViewById(R.id.operatingDaysField_Start);
         operatingDaysStart.setText("N/A");
 
-//        TextView operatingDaysEnd = (TextView) findViewById(R.id.operatingDaysField_End);
-//        operatingDaysEnd.setText("");
-
         TextView operatingHoursStart = (TextView) findViewById(R.id.operatingHoursField_Start);
         operatingHoursStart.setText("N/A");
 
-//        TextView operatingHoursEnd = (TextView) findViewById(R.id.operatingHoursField_End);
-//        operatingHoursEnd.setText("");
         TextView address = (TextView) findViewById(R.id.address);
         address.setText("N/A");
 
@@ -661,6 +651,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    public void anchorThePane(){
+        if (mLayout != null) {
+            mLayout.setAnchorPoint(0.7f);
+            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+        }
+    }
+
     public void insertData(){
 
         mydb.insertRestaurant("Bumbledees at 1938", "Western", "0.8 km",
@@ -671,7 +668,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mydb.insertRestaurant("The Kapits", "Western", "0.6 km",
                 "MON-SUN", "N/A", "10:00 - 0:00", "$", "+6013-4999507",
                 "8, Jalan Gemilang, 11800 Gelugor, Pulau Pinang",
-                "5.360454", "100.303527", "the_kapit's", "Halal");
+                "5.360454", "100.303527", "the_kapits", "Halal");
 
         mydb.insertRestaurant("Chicos cafe", "Western", "0.45 km",
                 "MON - FRI", " SAT - SUN", "8:00 - 17:00", "$", "+6012-4819061",
@@ -713,7 +710,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 "4, Lorong Cempedak 2, Kampung Dua Bukit, 14000 Gelugor, Pulau Pinang",
                 "5.352553","100.301864", "kopitan_classic_sungai_dua","Halal");
 
-        mydb.insertRestaurant("KFC","Fast food","0.7 km",
+        mydb.insertRestaurant("KFC","Fast Food","0.7 km",
                 "MON - SUN","N/A","0:00 - 0:00","$","04-656 8539",
                 "559 & 559A, Jalan Taman Sri Saujana,, Sungai Dua, 11700 George Town, Pulau Pinang",
                 "5.3524329","100.301435","kfc","Halal");
@@ -723,7 +720,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 "Desa University Comm. Complex, 6, Jalan Sungai Dua, 11700 Gelugor, Pulau Pinang",
                 "5.352384","100.299587","man_burger","Halal");
 
-        mydb.insertRestaurant("McDonald's", "Fast Food", "0.8 km",
+        mydb.insertRestaurant("McDonalds", "Fast Food", "0.8 km",
                 "MON-SUN","N/A","OPEN FOR 24 HOURS", "$", "+6 04-659 6346",
                 "4 B-C-D, Jalan Sungai Dua, 11700 Gelugor, Pulau Pinang", "5.35257799999999",
                 "100.299768699999","mcdonalds_sungai_dua", "Halal");
@@ -738,7 +735,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 "Desa University, 4, Jalan Sungai Dua, 11700, Pulau Pinang",
                 "5.352470", "100.299102", "pizza_hut_sungai_dua", "Halal");
 
-        mydb.insertRestaurant("Nasi Kandar Pelita","Malays	","0.9 km",
+        mydb.insertRestaurant("Nasi Kandar Pelita","Malay","0.9 km",
                 "MON - SUN","N/A","0:00 - 0:00","$","04-656 4602",
                 "723l-g, Jalan Sungai Dua, Desa Permai Indah, 11700 Gelugor, Pulau Pinang",
                 "5.352024","100.299324","nasi_kandar_pelita","Halal");
