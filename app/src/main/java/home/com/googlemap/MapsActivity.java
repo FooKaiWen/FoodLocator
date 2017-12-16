@@ -660,32 +660,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void insertData(){
 
-        mydb.insertRestaurant("Bumbledees at 1938", "Western", "0.8 km",
+        mydb.insertRestaurant("Bumbledees at 1938", "Western", "0.8",
                 "MON - FRI", "SAT - SUN", "9:00 - 20:00", "$$", "+6019-4733777",
                 "BumbleDee's Cafe, 11800 George Town, Penang, Malaysia",
                 "5.362104", "100.306944", "bumbledee", "Halal");
 
-        mydb.insertRestaurant("The Kapits", "Western", "0.6 km",
+        mydb.insertRestaurant("The Kapits", "Western", "0.6",
                 "MON-SUN", "N/A", "10:00 - 0:00", "$", "+6013-4999507",
                 "8, Jalan Gemilang, 11800 Gelugor, Pulau Pinang",
                 "5.360454", "100.303527", "the_kapits", "Halal");
 
-        mydb.insertRestaurant("Chicos cafe", "Western", "0.45 km",
+        mydb.insertRestaurant("Chicos cafe", "Western", "0.45",
                 "MON - FRI", " SAT - SUN", "8:00 - 17:00", "$", "+6012-4819061",
                 "D01, Anjung Budi, Jalan Ilmu, 11800 Gelugor, Pulau Pinang",
                 "5.357409","100.306151", "chico_cafe", "Halal");
 
-        mydb.insertRestaurant("Subaidah USM", "Indian", "0.22 km",
+        mydb.insertRestaurant("Subaidah USM", "Indian", "0.22",
                 "MON - SUN", "N/A", "7:00 - 22:00", "$", "N/A",
                 "17, Jalan Universiti, 11800 Gelugor, Pulau Pinang",
                 "5.356727", "100.304263", "subaidah", "Halal");
 
-        mydb.insertRestaurant("Golden Phoenix Restaurant", "Chinese", "0.7 km",
+        mydb.insertRestaurant("Golden Phoenix Restaurant", "Chinese", "0.7",
                 "MON - SUN", "N/A", "7:00 - 1:00", "$", "+6012-4206888",
                 "2-G-2, Jalan Sungai Dua, Taman Pekaka Desa University, 11700 Gelugor, Pulau Pinang",
                 "5.352714", "100.300135", "phoenix", "Non-halal");
 
-        mydb.insertRestaurant("Uview Cafe", "Multi-Cuisine", "0.24 km",
+        mydb.insertRestaurant("Uview Cafe", "Multi-Cuisine", "0.24",
                 "MON - SAT", "SUN", "OPEN FOR 24 HOURS", "$", "+6019-5652249",
                 "Jalan Universiti, 11800 Gelugor, Pulau Pinang",
                 "5.35877", "100.308409", "uview", "Halal");
@@ -695,22 +695,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 "Bangunan Canselori, 11700 Gelugor, Pulau Pinang", "5.358079",
                 "100.305627", "campus_cafe", "Halal");
 
-        mydb.insertRestaurant("43 Cafe","Cafe","0.55 km",
+        mydb.insertRestaurant("43 Cafe","Cafe","0.55",
                 "MON - SUN", "N/A","17:30 - 22:00", "$$ ","+6016-430 7009",
                 "43, Jalan Sungai Dua, Kampung Dua Bukit, 11700 Gelugor, Pulau Pinang",
                 "5.3532864","100.303787", "cafe_43", "Non-halal");
 
-        mydb.insertRestaurant("Riszona Restaurant","African","0.55 km",
+        mydb.insertRestaurant("Riszona Restaurant","African","0.55",
                 "MON - SUN","N/A", "12:00 - 0:00","$","010-774 4948",
                 "77B-1-14, Jalan Sungai Dua, Kampung Dua Bukit, 11700 Gelugor, Pulau Pinang",
                 "5.352696","100.302292","riszona","Non-halal");
 
-        mydb.insertRestaurant("Kopitan Classic","Cafe","0.6 km",
+        mydb.insertRestaurant("Kopitan Classic","Cafe","0.6",
                 "MON - SUN","N/A","11:00 - 23:00","$$","04-537 5697",
                 "4, Lorong Cempedak 2, Kampung Dua Bukit, 14000 Gelugor, Pulau Pinang",
                 "5.352553","100.301864", "kopitan_classic_sungai_dua","Halal");
 
-        mydb.insertRestaurant("KFC","Fast Food","0.7 km",
+        mydb.insertRestaurant("KFC","Fast Food","0.7",
                 "MON - SUN","N/A","0:00 - 0:00","$","04-656 8539",
                 "559 & 559A, Jalan Taman Sri Saujana,, Sungai Dua, 11700 George Town, Pulau Pinang",
                 "5.3524329","100.301435","kfc","Halal");
@@ -720,42 +720,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 "Desa University Comm. Complex, 6, Jalan Sungai Dua, 11700 Gelugor, Pulau Pinang",
                 "5.352384","100.299587","man_burger","Halal");
 
-        mydb.insertRestaurant("McDonalds", "Fast Food", "0.8 km",
+        mydb.insertRestaurant("McDonalds", "Fast Food", "0.8",
                 "MON-SUN","N/A","OPEN FOR 24 HOURS", "$", "+6 04-659 6346",
-                "4 B-C-D, Jalan Sungai Dua, 11700 Gelugor, Pulau Pinang", "5.35257799999999",
-                "100.299768699999","mcdonalds_sungai_dua", "Halal");
+                "4 B-C-D, Jalan Sungai Dua, 11700 Gelugor, Pulau Pinang", "5.352578",
+                "100.299404","mcdonalds_sungai_dua", "Halal");
 
-        mydb.insertRestaurant("Plus 2 Restaurant", "Chinese", "0.8 km",
+        mydb.insertRestaurant("Plus 2 Restaurant", "Chinese", "0.8",
                 "MON - SUN", "TUE", "11:00 - 19:30", "$", "04-656 7118",
                 "4K, Jalan Sungai Dua, Taman Pekaka Desa University, 11700 Gelugor, Pulau Pinang",
-                "5.3559337", "100.302517699999", "phoenix", "Non-halal");
+                "5.352478", "100.299189", "plus_2", "Non-halal");
 
-        mydb.insertRestaurant("Pizza Hut", "Fast Food", "0.8 km",
+        mydb.insertRestaurant("Pizza Hut", "Fast Food", "0.8",
                 "MON-SUN", "N/A", "11:00 - 23:00","$", "1-300-88-2525",
                 "Desa University, 4, Jalan Sungai Dua, 11700, Pulau Pinang",
                 "5.352470", "100.299102", "pizza_hut_sungai_dua", "Halal");
 
-        mydb.insertRestaurant("Nasi Kandar Pelita","Malay","0.9 km",
+        mydb.insertRestaurant("Nasi Kandar Pelita","Malay","0.9",
                 "MON - SUN","N/A","0:00 - 0:00","$","04-656 4602",
                 "723l-g, Jalan Sungai Dua, Desa Permai Indah, 11700 Gelugor, Pulau Pinang",
                 "5.352024","100.299324","nasi_kandar_pelita","Halal");
 
-        mydb.insertRestaurant("Hidden Recipe Cafe", "Cafe","0.9 km",
+        mydb.insertRestaurant("Hidden Recipe Cafe", "Cafe","0.9",
                 "TUE - SUN","MON","11:30 - 22:00","$$", "012-534 5496",
                 "723-G,Yellow House,Vanda Buisness Park,, Jalan Sungai Dua,Sungai Dua, 11700 George Town, Penang",
                 "5.351739","100.298909","hidden_recipe", "Halal");
 
-        mydb.insertRestaurant("Restaurant Kim Hin", "Chinese", "0.95 km",
-                "MON - SUN", "WED", "16:30 - 22:00", "$-$$", "+60 16-551 9152",
+        mydb.insertRestaurant("Restaurant Kim Hin", "Chinese", "0.95",
+                "MON - SUN", "WED", "16:30 - 22:00", "$", "+60 16-551 9152",
                 "MK 13, 674C, Jalan Sungai Dua, Taman Pekaka, 11700 Gelugor, Pulau Pinang",
                 "5.351722", "100.298206", "kim_him_seafood", "Non-halal");
 
-        mydb.insertRestaurant("Restaurant Heng Leong Seafood","Chinese","1.0 km",
+        mydb.insertRestaurant("Restaurant Heng Leong Seafood","Chinese","1.0",
                 "MON - SUN","TUE","16:30 - 22:00", "$","016-484 1383",
                 "Taman Pekaka, 11700 Sungai Dua, Penang","5.351511","100.298093",
                 "heng_leong","Non-halal");
 
-        mydb.insertRestaurant("Restaurant Hutton Lane	Chinese	","Chinese", "1.0 km",
+        mydb.insertRestaurant("Restaurant Hutton Lane	Chinese	","Chinese", "1.0",
                 "MON - SUNDAY","N/A	","11:00 - 22:30","$", "04-656 6586",
                 "727F, Jalan Sungai Dua, Desa Permai Indah, 11700 Gelugor, Pulau Pinang	",
                 "5.351233","100.298514","hutton_lane","Non-halal");
