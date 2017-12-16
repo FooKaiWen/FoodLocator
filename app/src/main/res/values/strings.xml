@@ -5,7 +5,7 @@
     <string name="uber">Uber</string>
     <string name="call">Call</string>
     <string-array name="cuisine_array">
-        <item>All</item>
+        <item>All Cuisine Type</item>
         <item>Western</item>
         <item>Cafe</item>
         <item>Japanese</item>

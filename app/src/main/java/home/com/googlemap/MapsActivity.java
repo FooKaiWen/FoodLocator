@@ -77,7 +77,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     double latitude = 0;
     String callNo = "";
     Spinner spinner;
-
+    String spinnerChoice = "All Cuisine Type";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +101,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         spinner = (Spinner) findViewById(R.id.spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.cuisine_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -120,45 +120,50 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         randomFill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int randomNum = new Random().nextInt(mydb.numberOfRows());
-                // retrieve the name of the marker and match it in the database
-                // display it all out in the
-                if (randomNum == 0) {
-                    randomNum++;
-                }
-
-                Cursor rs = mydb.getData(randomNum);
-                rs.moveToFirst();
-                String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
-                Marker found = null;
-
-                int i;
-                for (i = 0; i < mapMarkers.size(); i++) {
-                    if (getName == mapMarkers.get(i).getTitle()) {
-                        Toast.makeText(getApplicationContext(),Integer.toString(i),Toast.LENGTH_LONG).show();
-                        break;
+                Cursor rs1;
+                Cursor rs;
+                String randomCuisine;
+                if (!spinnerChoice.equals("All Cuisine Type")) {
+                        int randomNum = new Random().nextInt(mydb.numberOfRows());
+                        if (randomNum == 0) {
+                            randomNum++;
+                        }
+                        rs1 = mydb.getData(randomNum);
+                        rs1.moveToFirst();
+                        randomCuisine = rs1.getString(rs1.getColumnIndex(DBHelper.RESTAURANT_COLUMN_CUISINE));
+                        if(randomCuisine.equals(spinnerChoice)){
+                            setDetails(rs1);
+                        }
+                        rs1.close();
+                } else {
+                    int randomNum = new Random().nextInt(mydb.numberOfRows());
+                    if (randomNum == 0) {
+                        randomNum++;
                     }
+                    rs = mydb.getData(randomNum);
+                    rs.moveToFirst();
+//                    String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
+                    setDetails(rs);
                 }
 
-                if (i <= mydb.numberOfRows()) {
-                    Toast.makeText(getApplicationContext(), "Scroll Up For More", Toast.LENGTH_LONG).show();
-                    Cursor rs1 = mydb.getData(i);
-                    rs1.moveToFirst();
-//                    setDetails(rs1);
-//                    getLatLngCallNo(rs1);
-                    // change marker colour
-                    // get id then
-                    // getData(name, time, address, price)
-                    // create the function above
-                }
 
-//                if(found!=null){
-//                    currentLocationMarker = found;
-//                    mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocationMarker.getPosition()));
-//                    mMap.animateCamera(CameraUpdateFactory.newLatLng(currentLocationMarker.getPosition()));
-//                    found.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+//                Marker found = null;
+//                int i;
+//                for (i = 0; i < mapMarkers.size(); i++) {
+//                    if (getName == mapMarkers.get(i).getTitle()) {
+//                        Toast.makeText(getApplicationContext(),Integer.toString(i),Toast.LENGTH_LONG).show();
+//                        break;
+//                    }
 //                }
-                setDetails(rs);
+//                if (i <= mydb.numberOfRows()) {
+////                    Toast.makeText(getApplicationContext(), "Scroll Up For More", Toast.LENGTH_LONG).show();
+//                    Cursor rs1 = mydb.getData(i);
+//                    rs1.moveToFirst();
+////                    setDetails(rs1);
+////                    getLatLngCallNo(rs1);
+//                }
+
+
 
                 if (mLayout != null) {
                     mLayout.setAnchorPoint(0.7f);
@@ -290,9 +295,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (!adapterView.getSelectedItem().toString().matches("All")) {
+
+                if (!adapterView.getSelectedItem().toString().matches("All Cuisine Type")) {
                     mMap.clear();
-                    mapMarkers.clear();
+                    spinnerChoice = adapterView.getSelectedItem().toString();
                     for (int p = 1; p <= mydb.numberOfRows(); p++) {
                         Cursor rs = mydb.getData(p);
                         rs.moveToFirst();
@@ -309,7 +315,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 } else {
                     mMap.clear();
-                    mapMarkers.clear();
+                    spinnerChoice = adapterView.getSelectedItem().toString();
+                    if(!mapMarkers.isEmpty()){
+                        for (int p = 0; p < mapMarkers.size(); p++) {
+                            mapMarkers.remove(p);
+                        }
+                    }
                     for (int k = 1; k <= mydb.numberOfRows(); k++) {
                         Cursor rs = mydb.getData(k);
                         rs.moveToFirst();
@@ -330,19 +341,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        for (int i = 1; i <= mydb.numberOfRows(); i++) {
-            Cursor rs = mydb.getData(i);
-            rs.moveToFirst();
-            String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
-            String getLat = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LATITUDE));
-            String getLongi = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LONGITUDE));
-            String getType = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_FOODTYPE));
-            if (!rs.isClosed()) {
-                rs.close();
-            }
-            addMarker(i, getName, getLat, getLongi, getType);
-        }
-
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker currentM) {
@@ -351,29 +349,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         mLayout.setAnchorPoint(1.0f);
                         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                     }
-                    int i;
-                    for (i = 0; i < mapMarkers.size(); i++) {
-                        if (currentM.getTitle().equals(mapMarkers.get(i).getTitle())){
-                            break;
-                        }
-                    }
-                    i++;
-                    if (i <= mydb.numberOfRows()) {
-                        Toast.makeText(getApplicationContext(), Integer.toString(i), Toast.LENGTH_LONG).show();
-                        currentM.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                        Cursor rs = mydb.getData(i);
-                        rs.moveToFirst();
-                        setDetails(rs);
-                        getLatLngCallNo(rs);
-                        // change marker colour
-                        // get id then
-                        // getData(name, time, address, price)
-                        // create the function above
-                    }
+                    Toast.makeText(getApplicationContext(),"Swipe Up For More",Toast.LENGTH_LONG).show();
+                    currentM.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                    Cursor rs = mydb.getDataUsingName(currentM.getTitle());
+                    rs.moveToFirst();
+                    setDetails(rs);
+                    getLatLngCallNo(rs);
                     return false;
                 }
-            }
-        );
+        });
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -383,8 +367,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
                 setEmptyDetails();
-                // there is orange, red, yellow marker,
-                // then change all to default colour.
+
             }
         });
     }
@@ -579,12 +562,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MarkerOptions markerOptions = new MarkerOptions().position(latlng).title(name);
 
         if (type.matches("Halal")) {
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+            markerOptions.snippet("Halal");
         } else if (type.matches("Non-halal")) {
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-        } else
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-
+            markerOptions.snippet("Non-halal");
+        }
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
         currentLocationMarker = mMap.addMarker(markerOptions);
         mapMarkers.add(mMap.addMarker(markerOptions));
     }
@@ -658,6 +640,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (checkLocationPermission()) {
             UiSettings mUiSettings = mMap.getUiSettings();
             mMap.setMyLocationEnabled(true);
+            mMap.setTrafficEnabled(false);
+            mMap.setBuildingsEnabled(false);
             mUiSettings.setMyLocationButtonEnabled(true);
             mUiSettings.setTiltGesturesEnabled(true);
             mUiSettings.setRotateGesturesEnabled(false);
@@ -665,27 +649,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void insertData(){
-        mydb.insertRestaurant("Bumbledee's at 1938", "Western", "0.8 km",
+        mydb.insertRestaurant("Bumbledees at 1938", "Western", "0.8 km",
                 "MON - FRI", "SAT - SUN", "9:00 - 20:00", "$$$", "+6019-4733777",
                 "BumbleDee's Cafe, 11800 George Town, Penang, Malaysia",
                 "5.362104", "100.306944", "bumbledee", "Halal");
 
-        mydb.insertRestaurant("McDonald's", "Fast Food", "0.8 km",
+        mydb.insertRestaurant("McDonalds", "Fast Food", "0.8 km",
                 "MON-SUN","N/A","OPEN FOR 24 HOURS", "$-$$", "+6 04-659 6346",
                 "4 B-C-D, Jalan Sungai Dua, 11700 Gelugor, Pulau Pinang",
-                "5.352584", "100.299395","mcdonalds_sungai_dua", "Halal");
+                "5.352570", "100.29955","mcdonalds_sungai_dua", "Halal");
 
         mydb.insertRestaurant("Pizza Hut", "Fast Food", "0.8 km",
                 "MON-SUN", "N/A", "11:00 - 23:00","$-$$", "1-300-88-2525",
                 "Desa University, 4, Jalan Sungai Dua, 11700, Pulau Pinang",
                 "5.352470", "100.299102", "pizza_hut_sungai_dua", "Halal");
 
-        mydb.insertRestaurant("The Kapit's", "Western", "0.6 km",
+        mydb.insertRestaurant("The Kapits", "Western", "0.6 km",
                 "MON-SUN", "N/A", "10:00 - 0:00", "$-$$", "+60 13-499 9507",
                 "8, Jalan Gemilang, 11800 Gelugor, Pulau Pinang",
-                "5.360454", "100.303527", "the_kapit's", "Halal");
+                "5.360454", "100.303527", "the_kapits", "Halal");
 
-        mydb.insertRestaurant("Chico's cafe", "Western", "0.45 km",
+        mydb.insertRestaurant("Chicos cafe", "Western", "0.45 km",
                 "MON - FRI", " SAT - SUN", "8:00 - 17:00", "$-$$", "+60 12-4819061",
                 "D01, Anjung Budi, Jalan Ilmu, 11800 Gelugor, Pulau Pinang",
                 "5.357409","100.306151", "chico_cafe", "Halal");
