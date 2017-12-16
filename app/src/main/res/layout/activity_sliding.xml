@@ -203,10 +203,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:baselineAligned="false">
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="250dp"
+            android:layout_height="43dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="03dp"
+            android:lineSpacingExtra="14sp" />
     <ListView
         android:id="@+id/list"
         android:layout_width="0dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="120dp"
         android:layout_height="600dp"
         android:orientation="horizontal"
         android:layout_weight="1">

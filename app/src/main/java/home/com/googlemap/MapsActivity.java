@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
@@ -25,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,10 +80,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     String callNo = "";
     Spinner cuisineSpinner;
     Spinner priceSpinner;
-    String cuisineChoice = "All Cuisine";
-    String priceChoice = "All Price";
     int randomNum = 1;
     int lastrandomNum = 1;
+    private RatingBar ratingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         setEmptyDetails();
+        addListenerOnRatingBar();
 
         cuisineSpinner = (Spinner) findViewById(R.id.cuisineSpinner);
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.cuisine_array, android.R.layout.simple_spinner_item);
@@ -128,17 +130,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Cursor rs1;
                 Cursor rs;
                 String randomCuisine;
-                if (!cuisineChoice.equals("All Cuisine")) {
-                    for(int k = 1 ; k <= mydb.numberOfRows() ; k++) {
+                String randomPrice;
+                String cuisinetext = cuisineSpinner.getSelectedItem().toString();
+                String pricetext = priceSpinner.getSelectedItem().toString();
+                if (!cuisinetext.equals("All Cuisine")) {
+                    for (int k = 1; k <= mydb.numberOfRows(); k++) {
                         lastrandomNum = randomNum;
-                        randomNum = new Random().nextInt(mydb.numberOfRows());
-                        if (randomNum == 0) {
-                            randomNum++;
-                        }
+                        do {
+                            randomNum = new Random().nextInt(mydb.numberOfRows());
+                            if (randomNum == 0) {
+                                randomNum++;
+                            }
+                        } while (randomNum == lastrandomNum);
+
                         rs1 = mydb.getData(randomNum);
                         rs1.moveToFirst();
                         randomCuisine = rs1.getString(rs1.getColumnIndex(DBHelper.RESTAURANT_COLUMN_CUISINE));
-                        if (randomCuisine.equals(cuisineChoice)) {
+                        randomPrice = rs1.getString(rs1.getColumnIndex(DBHelper.RESTAURANT_COLUMN_PRICE));
+                        if (randomCuisine.equals(cuisinetext) && randomPrice.equals(pricetext)) {
                             setDetails(rs1);
                             Toast.makeText(getApplicationContext(), "We randomly chose for you!", Toast.LENGTH_LONG).show();
                             anchorThePane();
@@ -279,68 +288,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         setUpMap();
-
-
-
-        cuisineSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                if (!adapterView.getSelectedItem().toString().matches("All Cuisine")) {
-                    mMap.clear();
-                    cuisineChoice = adapterView.getSelectedItem().toString();
-                    for (int p = 1; p <= mydb.numberOfRows(); p++) {
-                        Cursor rs = mydb.getData(p);
-                        rs.moveToFirst();
-                        if(rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_CUISINE)).matches(adapterView.getSelectedItem().toString())) {
-                            String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
-                            String getLat = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LATITUDE));
-                            String getLongi = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LONGITUDE));
-                            String getType = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_FOODTYPE));
-                            if (!rs.isClosed()) {
-                                rs.close();
-                            }
-                            addMarker(p, getName, getLat, getLongi, getType);
-                        }
-                    }
-                } else {
-                    mMap.clear();
-                    cuisineChoice = adapterView.getSelectedItem().toString();
-                    if(!mapMarkers.isEmpty()){
-                        for (int p = 0; p < mapMarkers.size(); p++) {
-                            mapMarkers.remove(p);
-                        }
-                    }
-                    for (int k = 1; k <= mydb.numberOfRows(); k++) {
-                        Cursor rs = mydb.getData(k);
-                        rs.moveToFirst();
-                        String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
-                        String getLat = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LATITUDE));
-                        String getLongi = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LONGITUDE));
-                        String getType = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_FOODTYPE));
-                        if (!rs.isClosed()) {
-                            rs.close();
-                        }
-                        addMarker(k, getName, getLat, getLongi, getType);
-                    }
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                for (int k = 1; k <= mydb.numberOfRows(); k++) {
-                    Cursor rs = mydb.getData(k);
-                    rs.moveToFirst();
-                    String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
-                    String getLat = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LATITUDE));
-                    String getLongi = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LONGITUDE));
-                    String getType = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_FOODTYPE));
-                    if (!rs.isClosed()) {
-                        rs.close();
-                    }
-                    addMarker(k, getName, getLat, getLongi, getType);
-                }
-            }
-        });
+        addListenerOnSpinner();
 
         for (int i = 1; i <= mydb.numberOfRows(); i++) {
             Cursor rs = mydb.getData(i);
@@ -352,7 +300,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (!rs.isClosed()) {
                 rs.close();
             }
-            addMarker(i, getName, getLat, getLongi, getType);
+            addMarker(getName, getLat, getLongi, getType);
         }
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -512,10 +460,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onPause() {
         super.onPause();
-        if (client.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(client, this);
-            client.disconnect();
-        }
+//        if (client.isConnected()) {
+//            LocationServices.FusedLocationApi.removeLocationUpdates(client, this);
+//            client.disconnect();
+//        }
     }
 
     @Override
@@ -569,7 +517,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    public void addMarker(int id, String name, String lat, String longi, String type) {
+    public void addMarker(String name, String lat, String longi, String type) {
         // need latitude, longitude, id
 
         LatLng latlng = new LatLng(Double.parseDouble(lat), Double.parseDouble(longi));
@@ -583,6 +531,77 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
         currentLocationMarker = mMap.addMarker(markerOptions);
         mapMarkers.add(mMap.addMarker(markerOptions));
+    }
+
+    public void getSpinnerData(){
+        mMap.clear();
+        cuisineSpinner = (Spinner)findViewById(R.id.cuisineSpinner);
+        String cuisinetext = cuisineSpinner.getSelectedItem().toString();
+        priceSpinner = (Spinner)findViewById(R.id.priceSpinner);
+        String pricetext = priceSpinner.getSelectedItem().toString();
+        String price;
+        String cuisine;
+        if(pricetext.equals("All Price")){
+            price = "";
+        } else {
+            price = "where price = '"+pricetext+"'";
+        }
+
+        if(cuisinetext.equals("All Cuisine")){
+            cuisine = "";
+        } else {
+            cuisine = "where cuisine = '"+cuisinetext+"'";
+        }
+        Cursor rs = mydb.getDataforSpinner(cuisine, price);
+        if (rs.moveToFirst()){
+            do{
+                String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
+                String getLat = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LATITUDE));
+                String getLongi = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LONGITUDE));
+                String getType = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_FOODTYPE));
+                addMarker(getName, getLat, getLongi, getType);
+
+            }while(rs.moveToNext());
+        } else {
+            Toast.makeText(getApplicationContext(),"No restaurant found!",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void getRandomData(){
+        cuisineSpinner = (Spinner)findViewById(R.id.cuisineSpinner);
+        String cuisinetext = cuisineSpinner.getSelectedItem().toString();
+        priceSpinner = (Spinner)findViewById(R.id.priceSpinner);
+        String pricetext = priceSpinner.getSelectedItem().toString();
+        String price;
+        String cuisine;
+        if(pricetext.equals("All Price")){
+            price = "";
+        } else {
+            price = "where price = '"+pricetext+"'";
+        }
+
+        if(cuisinetext.equals("All Cuisine")){
+            cuisine = "";
+        } else {
+            cuisine = "where cuisine = '"+cuisinetext+"'";
+        }
+
+        Cursor rs = mydb.getDataforSpinner(cuisine, price);
+        lastrandomNum = randomNum;
+        do {
+            randomNum = new Random().nextInt(rs.getCount());
+            if (randomNum == 0) {
+                randomNum++;
+            }
+        } while (randomNum == lastrandomNum);
+
+        if (rs.moveToFirst()){
+            setDetails(rs);
+            Toast.makeText(getApplicationContext(), "We randomly chose for you!", Toast.LENGTH_LONG).show();
+            anchorThePane();
+        } else {
+            Toast.makeText(getApplicationContext(),"No restaurant found!",Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void setDetails(Cursor restaurant) {
@@ -637,6 +656,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         callNo = "";
         latitude = 0;
         longitude = 0;
+    }
+
+    public void addListenerOnSpinner(){
+        cuisineSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                getSpinnerData();
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
+        priceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                getSpinnerData();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    public void addListenerOnRatingBar() {
+
+        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+
+        //if rating value is changed,
+        //display the current rating value in the result (textview) automatically
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            public void onRatingChanged(RatingBar ratingBar, float rating,
+                                        boolean fromUser) {
+
+
+            }
+        });
     }
 
     private void setUpMap() {
@@ -696,7 +757,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 "100.305627", "campus_cafe", "Halal");
 
         mydb.insertRestaurant("43 Cafe","Cafe","0.55",
-                "MON - SUN", "N/A","17:30 - 22:00", "$$ ","+6016-430 7009",
+                "MON - SUN", "N/A","17:30 - 22:00", "$$","+6016-430 7009",
                 "43, Jalan Sungai Dua, Kampung Dua Bukit, 11700 Gelugor, Pulau Pinang",
                 "5.3532864","100.303787", "cafe_43", "Non-halal");
 

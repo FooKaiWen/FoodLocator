@@ -41,8 +41,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db){
-        db.execSQL("create table restaurant" + "(id integer primary key, name blob,cuisine text," +
-                "distance blob, work blob, rest blob, time text, price blob, contact text," +
+        db.execSQL("create table restaurant" + "(id integer primary key, name text,cuisine text," +
+                "distance blob, work blob, rest blob, time text, price text, contact text," +
                 " address blob, latitude blob, longitude blob, imagename text, foodtype text)");
     }
 
@@ -78,6 +78,18 @@ public class DBHelper extends SQLiteOpenHelper {
     public Cursor getData(int id){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select * from restaurant where id="+id+"",null);
+        return res;
+    }
+
+    public Cursor getDataforSpinner(String cuisine, String price){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select * from(select * from restaurant "+cuisine+") "+price+"",null);
+        return res;
+    }
+
+    public Cursor getRandomDataforSpinner(String cuisine, String price, int randomNum){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select * from(select * from restaurant "+cuisine+") "+price+"",null);
         return res;
     }
 
