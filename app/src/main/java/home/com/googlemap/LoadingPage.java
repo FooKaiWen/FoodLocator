@@ -13,12 +13,12 @@ public class LoadingPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loadingpage);
         final Intent intent = new Intent(this, MapsActivity.class);
-        new CountDownTimer(3000, 1000) {
+        new CountDownTimer(1000, 1000) {
             public void onFinish() {
                 startActivity(intent);
             }
             public void onTick(long millisUntilFinished) {
-                millisUntilFinished = 3000;
+                //millisUntilFinished = 1000;
             }
         }.start();
     }
