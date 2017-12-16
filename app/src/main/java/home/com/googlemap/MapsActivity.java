@@ -558,21 +558,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ri.setImageDrawable(null);
 
         TextView operatingDaysStart = (TextView) findViewById(R.id.operatingDaysField_Start);
-        operatingDaysStart.setText("NOT AVAILABLE");
+        operatingDaysStart.setText("N/A");
 
 //        TextView operatingDaysEnd = (TextView) findViewById(R.id.operatingDaysField_End);
 //        operatingDaysEnd.setText("");
 
         TextView operatingHoursStart = (TextView) findViewById(R.id.operatingHoursField_Start);
-        operatingHoursStart.setText("NOT AVAILABLE");
+        operatingHoursStart.setText("N/A");
 
 //        TextView operatingHoursEnd = (TextView) findViewById(R.id.operatingHoursField_End);
 //        operatingHoursEnd.setText("");
         TextView address = (TextView) findViewById(R.id.address);
-        address.setText("NOT AVAILABLE");
+        address.setText("N/A");
 
         TextView contact = (TextView) findViewById(R.id.contact);
-        contact.setText("NOT AVAILABLE");
+        contact.setText("N/A");
 
         TextView price = (TextView) findViewById(R.id.price);
         price.setText("");
@@ -593,19 +593,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void insertData(){
-        mydb.insertRestaurant("Bumbledee's at 1938",
-                "Western",
-                "0.8",
-                "MON - FRI",
-                "SAT - SUN",
-                "9:00 - 20:00",
-                "$$$",
-                "+60 19-473 3777",
-                "B07 Rumah Tetamu,Universiti Sains Malaysia, Penang Island 11700, Malaysia",
-                "5.3620769",
-                "100.306943888888",
-                "bumbledee",
-                "Halal");
+        mydb.insertRestaurant("Bumbledee's at 1938", "Western", "0.8 km",
+                "MON - FRI", "SAT - SUN", "9:00 - 20:00", "$$$", "+6019-4733777",
+                "BumbleDee's Cafe, 11800 George Town, Penang, Malaysia",
+                "5.36244", "100.306987", "bumbledee", "Halal");
+
+        mydb.insertRestaurant("McDonald's", "Fast food", "0.8 km",
+                "MON-SUN","N/A","OPEN FOR 24 HOURS", "$-$$", "+6 04-659 6346",
+                "4 B-C-D, Jalan Sungai Dua, 11700 Gelugor, Pulau Pinang",
+                "5.353244", "100.29942","mcdonalds_sungai_dua", "Halal");
+
+        mydb.insertRestaurant("Pizza Hut", "Fast food", "0.8 km",
+                "MON-SUN", "N/A", "11:00 - 23:00","$-$$", "1-300-88-2525",
+                "Desa University, 4, Jalan Sungai Dua, 11700, Pulau Pinang",
+                "5.356226", "100.298586", "pizza_hut_sungai_dua", "Halal");
     }
 
 }

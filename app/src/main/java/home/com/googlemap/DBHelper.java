@@ -42,7 +42,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db){
         db.execSQL("create table restaurant" + "(id integer primary key, name text,cuisine text," +
-                "distance real, work blob, rest blob, time text, price blob, contact text," +
+                "distance blob, work blob, rest blob, time text, price blob, contact text," +
                 " address blob, latitude real, longitude real, imagename text, foodtype text)");
     }
 
