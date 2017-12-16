@@ -21,8 +21,11 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,6 +76,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     double longitude = 0;
     double latitude = 0;
     String callNo = "";
+    Spinner spinner;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +98,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         setEmptyDetails();
+
+        spinner = (Spinner) findViewById(R.id.spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.cuisine_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
 
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         mLayout.setFadeOnClickListener(new View.OnClickListener() {
@@ -117,10 +131,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 rs.moveToFirst();
                 String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
                 Marker found = null;
-                for (Marker m : mapMarkers) {
-                    if (m.getTitle() == getName) {
-                        found = m;
+
+                int i;
+                for (i = 0; i < mapMarkers.size(); i++) {
+                    if (getName == mapMarkers.get(i).getTitle()) {
+                        Toast.makeText(getApplicationContext(),Integer.toString(i),Toast.LENGTH_LONG).show();
+                        break;
                     }
+                }
+
+                if (i <= mydb.numberOfRows()) {
+                    Toast.makeText(getApplicationContext(), "Scroll Up For More", Toast.LENGTH_LONG).show();
+                    Cursor rs1 = mydb.getData(i);
+                    rs1.moveToFirst();
+//                    setDetails(rs1);
+//                    getLatLngCallNo(rs1);
+                    // change marker colour
+                    // get id then
+                    // getData(name, time, address, price)
+                    // create the function above
                 }
 
 //                if(found!=null){
@@ -258,6 +287,49 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         setUpMap();
 
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (!adapterView.getSelectedItem().toString().matches("All")) {
+                    mMap.clear();
+                    mapMarkers.clear();
+                    for (int p = 1; p <= mydb.numberOfRows(); p++) {
+                        Cursor rs = mydb.getData(p);
+                        rs.moveToFirst();
+                        if(rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_CUISINE)).matches(adapterView.getSelectedItem().toString())) {
+                            String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
+                            String getLat = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LATITUDE));
+                            String getLongi = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LONGITUDE));
+                            String getType = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_FOODTYPE));
+                            if (!rs.isClosed()) {
+                                rs.close();
+                            }
+                            addMarker(p, getName, getLat, getLongi, getType);
+                        }
+                    }
+                } else {
+                    mMap.clear();
+                    mapMarkers.clear();
+                    for (int k = 1; k <= mydb.numberOfRows(); k++) {
+                        Cursor rs = mydb.getData(k);
+                        rs.moveToFirst();
+                        String getName = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME));
+                        String getLat = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LATITUDE));
+                        String getLongi = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_LONGITUDE));
+                        String getType = rs.getString(rs.getColumnIndex(DBHelper.RESTAURANT_COLUMN_FOODTYPE));
+                        if (!rs.isClosed()) {
+                            rs.close();
+                        }
+                        addMarker(k, getName, getLat, getLongi, getType);
+                    }
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         for (int i = 1; i <= mydb.numberOfRows(); i++) {
             Cursor rs = mydb.getData(i);
             rs.moveToFirst();
@@ -272,35 +344,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                                          @Override
-                                          public boolean onMarkerClick(Marker currentM) {
-                                              if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED
-                                                      || mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                                                  mLayout.setAnchorPoint(1.0f);
-                                                  mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                                              }
-                                              int i;
-                                              for (i = 0; i < mapMarkers.size(); i++) {
-                                                  if (currentM.getTitle() == mapMarkers.get(i).getTitle()) {
-                                                      break;
-                                                  }
-                                              }
-
-                                              if (i <= mydb.numberOfRows()) {
-                                                  Toast.makeText(getApplicationContext(), "Scroll Up For More", Toast.LENGTH_LONG).show();
-                                                  currentM.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                                                  Cursor rs = mydb.getData(i);
-                                                  rs.moveToFirst();
-                                                  setDetails(rs);
-                                                  getLatLngCallNo(rs);
-                                                  // change marker colour
-                                                  // get id then
-                                                  // getData(name, time, address, price)
-                                                  // create the function above
-                                              }
-                                              return false;
-                                          }
-                                      }
+                @Override
+                public boolean onMarkerClick(Marker currentM) {
+                    if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED
+                            || mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                        mLayout.setAnchorPoint(1.0f);
+                        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                    }
+                    int i;
+                    for (i = 0; i < mapMarkers.size(); i++) {
+                        if (currentM.getTitle().equals(mapMarkers.get(i).getTitle())){
+                            break;
+                        }
+                    }
+                    i++;
+                    if (i <= mydb.numberOfRows()) {
+                        Toast.makeText(getApplicationContext(), Integer.toString(i), Toast.LENGTH_LONG).show();
+                        currentM.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                        Cursor rs = mydb.getData(i);
+                        rs.moveToFirst();
+                        setDetails(rs);
+                        getLatLngCallNo(rs);
+                        // change marker colour
+                        // get id then
+                        // getData(name, time, address, price)
+                        // create the function above
+                    }
+                    return false;
+                }
+            }
         );
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -596,14 +668,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mydb.insertRestaurant("Bumbledee's at 1938", "Western", "0.8 km",
                 "MON - FRI", "SAT - SUN", "9:00 - 20:00", "$$$", "+6019-4733777",
                 "BumbleDee's Cafe, 11800 George Town, Penang, Malaysia",
-                "5.36244", "100.306987", "bumbledee", "Halal");
+                "5.3620769", "100.306943888888", "bumbledee", "Halal");
 
-        mydb.insertRestaurant("McDonald's", "Fast food", "0.8 km",
+        mydb.insertRestaurant("McDonald's", "Fast Food", "0.8 km",
                 "MON-SUN","N/A","OPEN FOR 24 HOURS", "$-$$", "+6 04-659 6346",
                 "4 B-C-D, Jalan Sungai Dua, 11700 Gelugor, Pulau Pinang",
                 "5.353244", "100.29942","mcdonalds_sungai_dua", "Halal");
 
-        mydb.insertRestaurant("Pizza Hut", "Fast food", "0.8 km",
+        mydb.insertRestaurant("Pizza Hut", "Fast Food", "0.8 km",
                 "MON-SUN", "N/A", "11:00 - 23:00","$-$$", "1-300-88-2525",
                 "Desa University, 4, Jalan Sungai Dua, 11700, Pulau Pinang",
                 "5.356226", "100.298586", "pizza_hut_sungai_dua", "Halal");
@@ -611,7 +683,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mydb.insertRestaurant("The Kapit's", "Western", "0.6 km",
                 "MON-SUN", "N/A", "10:00 - 0:00", "$-$$", "+60 13-499 9507",
                 "8, Jalan Gemilang, 11800 Gelugor, Pulau Pinang",
-                "5.360808", "100.303539", "the_kapit's", "Halal");
+                "5.360808", "100.303539", "the_kapits", "Halal");
 
     }
 
