@@ -668,22 +668,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mydb.insertRestaurant("Bumbledee's at 1938", "Western", "0.8 km",
                 "MON - FRI", "SAT - SUN", "9:00 - 20:00", "$$$", "+6019-4733777",
                 "BumbleDee's Cafe, 11800 George Town, Penang, Malaysia",
-                "5.3620769", "100.306943888888", "bumbledee", "Halal");
+                "5.362104", "100.306944", "bumbledee", "Halal");
 
         mydb.insertRestaurant("McDonald's", "Fast Food", "0.8 km",
                 "MON-SUN","N/A","OPEN FOR 24 HOURS", "$-$$", "+6 04-659 6346",
                 "4 B-C-D, Jalan Sungai Dua, 11700 Gelugor, Pulau Pinang",
-                "5.353244", "100.29942","mcdonalds_sungai_dua", "Halal");
+                "5.352584", "100.299395","mcdonalds_sungai_dua", "Halal");
 
         mydb.insertRestaurant("Pizza Hut", "Fast Food", "0.8 km",
                 "MON-SUN", "N/A", "11:00 - 23:00","$-$$", "1-300-88-2525",
                 "Desa University, 4, Jalan Sungai Dua, 11700, Pulau Pinang",
-                "5.356226", "100.298586", "pizza_hut_sungai_dua", "Halal");
+                "5.352470", "100.299102", "pizza_hut_sungai_dua", "Halal");
 
         mydb.insertRestaurant("The Kapit's", "Western", "0.6 km",
                 "MON-SUN", "N/A", "10:00 - 0:00", "$-$$", "+60 13-499 9507",
                 "8, Jalan Gemilang, 11800 Gelugor, Pulau Pinang",
-                "5.360808", "100.303539", "the_kapits", "Halal");
+                "5.360454", "100.303527", "the_kapit's", "Halal");
+
+        mydb.insertRestaurant("Chico's cafe", "Western", "0.45 km",
+                "MON - FRI", " SAT - SUN", "8:00 - 17:00", "$-$$", "+60 12-4819061",
+                "D01, Anjung Budi, Jalan Ilmu, 11800 Gelugor, Pulau Pinang",
+                "5.357409","100.306151", "chico_cafe", "Halal");
+
+        mydb.insertRestaurant("Restaurant Kim Hin", "Chinese", "0.95 km",
+                "MON - SUN", "WED", "16:30 - 22:00", "$-$$", "+60 16-551 9152",
+                "MK 13, 674C, Jalan Sungai Dua, Taman Pekaka, 11700 Gelugor, Pulau Pinang",
+                "5.351722", "100.298206", "kim_him_seafood", "Non-halal");
 
     }
 
