@@ -4,6 +4,7 @@
     <string name="title_activity_test">Test</string>
     <string name="uber">Uber</string>
     <string name="call">Call</string>
+    <string name="restaurant_details">Restaurant Details</string>
     <string-array name="cuisine_array">
         <item>All Cuisine</item>
         <item>African</item>

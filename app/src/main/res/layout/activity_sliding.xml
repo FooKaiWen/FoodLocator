@@ -1,112 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="match_parent"
+<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="#eceff1"
     android:orientation="vertical"
     android:focusable="false"
     android:id="@+id/dragView"
+
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="70dp"
         android:orientation="horizontal"
         android:id="@+id/linearLayout">
 
         <TextView
             android:id="@+id/restaurantName"
-            android:layout_width="290dp"
+            android:layout_width="250dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="50dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
+            android:layout_weight="1"
             android:lineSpacingExtra="14sp"
             android:textAlignment="gravity"
-            android:textSize="25sp" />
+            android:textSize="35sp" />
 
         <TextView
             android:id="@+id/price"
-            android:layout_width="90dp"
+            android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginRight="21dp"
-            android:layout_marginEnd="21dp"
-            android:layout_marginTop="03dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
             android:lineSpacingExtra="0sp"
             android:textAlignment="gravity"
-            android:textSize="20sp" />
+            android:textSize="35sp" />
 
-    </LinearLayout>
-
-
-    <ImageView
-        android:id="@+id/restaurantImage"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/linearLayout"
-        android:foregroundGravity="center_horizontal"
-        android:src="@drawable/subaidah" />
-
-    <Space
-        android:id="@+id/centerAnchor"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:layout_below="@+id/restaurantImage"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp" />
-
-    <Button
-        android:id="@+id/callButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/restaurantImage"
-        android:layout_toLeftOf="@+id/centerAnchor"
-        android:layout_toStartOf="@+id/centerAnchor"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginEnd="5dp"
-        android:foregroundGravity="center_horizontal"
-        android:text="@string/call" />
-
-    <Button
-        android:id="@+id/transportButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/restaurantImage"
-        android:layout_toEndOf="@+id/centerAnchor"
-        android:layout_toRightOf="@+id/centerAnchor"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:foregroundGravity="center_horizontal"
-        android:text="@string/uber"
-         />
-
-    <TextView
-        android:layout_marginTop="40dp"
-        android:id="@+id/operatingDaysDisplay"
-        android:layout_width="148dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/callButton"
-        android:layout_marginLeft="42dp"
-        android:lineSpacingExtra="7sp"
-        android:text="Operating Days: "
-        android:textAlignment="gravity"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/operatingDaysField_Start"
-        android:layout_width="140dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/callButton"
-        android:layout_marginTop="40dp"
-        android:layout_toRightOf="@+id/operatingDaysDisplay"
-        android:lineSpacingExtra="7sp"
-        android:textAlignment="gravity"
-        android:textSize="20sp" />
-
-    <!--<TextView-->
+        <!--<TextView-->
         <!--android:layout_marginTop="40dp"-->
         <!--android:id="@+id/to1"-->
         <!--android:layout_width="28dp"-->
@@ -128,54 +65,6 @@
         <!--android:lineSpacingExtra="7sp"-->
         <!--android:textAlignment="gravity"-->
         <!--android:textSize="20sp" />-->
-
-    <TextView
-        android:id="@+id/operatingHoursDisplay"
-        android:layout_width="157dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/operatingDaysDisplay"
-        android:layout_marginLeft="33dp"
-        android:lineSpacingExtra="7sp"
-        android:text="Operating Hours: "
-        android:textAlignment="gravity"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/operatingHoursField_Start"
-        android:layout_width="140dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/operatingDaysDisplay"
-        android:layout_toRightOf="@+id/operatingHoursDisplay"
-        android:lineSpacingExtra="7sp"
-        android:textAlignment="gravity"
-        android:textSize="20sp"
-        />
-
-    <TextView
-        android:id="@+id/address"
-        android:layout_width="140dp"
-        android:layout_height="60dp"
-        android:layout_alignEnd="@+id/operatingHoursField_Start"
-        android:layout_alignLeft="@+id/operatingHoursDisplay"
-        android:layout_alignRight="@+id/operatingHoursField_Start"
-        android:layout_alignStart="@+id/operatingHoursDisplay"
-        android:layout_below="@+id/operatingHoursDisplay"
-        android:lineSpacingExtra="7sp"
-        android:textAlignment="gravity"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/contact"
-        android:layout_width="140dp"
-        android:layout_height="30dp"
-        android:layout_alignLeft="@+id/operatingDaysDisplay"
-        android:layout_alignStart="@+id/operatingDaysDisplay"
-        android:layout_alignEnd="@+id/address"
-        android:layout_alignRight="@+id/address"
-        android:layout_below="@+id/address"
-        android:lineSpacingExtra="7sp"
-        android:textAlignment="gravity"
-        android:textSize="20sp" />
 
     <!--<TextView-->
         <!--android:id="@+id/to2"-->
@@ -199,25 +88,205 @@
         <!--android:textSize="20sp"-->
         <!--android:text=" 44:44"/>-->
 
-    <LinearLayout
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/restaurantImage"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false">
+        android:layout_height="180dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/linearLayout2"
+        android:foregroundGravity="center_horizontal"
+        app:srcCompat="@drawable/restaurant" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/linearLayout"
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout2" >
+
         <RatingBar
             android:id="@+id/ratingBar"
-            android:layout_width="250dp"
-            android:layout_height="43dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="03dp"
-            android:lineSpacingExtra="14sp" />
-    <ListView
-        android:id="@+id/list"
-        android:layout_width="0dp"
-        android:layout_marginTop="120dp"
-        android:layout_height="600dp"
-        android:orientation="horizontal"
-        android:layout_weight="1">
-    </ListView>
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            android:layout_marginLeft="10dp"
+            android:transformPivotX="2dp"
+            android:transformPivotY="2dp"
+            android:isIndicator="true"
+            android:max="5" />
+
+        <TextView
+            android:id="@+id/restaurantDistance"
+            android:layout_width="10dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="70dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:lineSpacingExtra="0sp"
+            android:textAlignment="gravity"
+            android:textSize="25sp" />
+
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:background="#ffa726"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/restaurantImage"
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout3">
+
+        <EditText
+            android:id="@+id/cuisine"
+            android:layout_width="70dp"
+            android:layout_height="65dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="100dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:text="cuisine" />
+
+        <TextView
+            android:id="@+id/foodType"
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="50dp"
+            android:layout_weight="1"
+            android:text="TextView" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/operatingDaysField_Start"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/linearLayout3"
+        android:text="TextView"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/operatingHoursField_Start"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="100dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/linearLayout3"
+        android:text="TextView"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/contact"
+        android:layout_marginLeft="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignBottom="@+id/callButton"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="8dp"
+        android:text="TextView"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/address"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="100dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/imageView6"
+        android:text="TextView"
+        android:textSize="25sp" />
+
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_alignBottom="@+id/operatingHoursField_Start"
+        android:layout_alignLeft="@+id/callButton"
+        android:layout_alignStart="@+id/callButton"
+        android:layout_marginBottom="8dp"
+        app:srcCompat="@drawable/open" />
+
+    <ImageButton
+        android:id="@+id/callButton"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_above="@+id/imageView6"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="9dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginStart="9dp"
+        android:background="#eceff1"
+        app:srcCompat="@drawable/call" />
+
+    <ImageButton
+        android:id="@+id/transportButton"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_above="@+id/textView2"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="25dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        android:background="#ffffff"
+        app:srcCompat="@drawable/uber" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="70dp"
+        android:layout_height="65dp"
+        android:layout_alignLeft="@+id/callButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/callButton"
+        android:background="#eceff1"
+        app:srcCompat="@drawable/location" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/operatingDaysField_Start"
+        android:layout_marginLeft="22dp"
+        android:layout_marginStart="22dp"
+        android:layout_toEndOf="@+id/transportButton"
+        android:layout_toRightOf="@+id/transportButton"
+        android:layout_weight="1"
+        android:id="@+id/textView2" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/linearLayout2"
+        android:orientation="horizontal">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="600dp" />
+    </LinearLayout>
+
+
 </RelativeLayout>
