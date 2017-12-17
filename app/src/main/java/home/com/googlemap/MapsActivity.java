@@ -28,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -56,7 +57,6 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import com.google.maps.android.clustering.ClusterManager;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
@@ -648,15 +648,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         int imageResource = getResources().getIdentifier(uri, null, getPackageName());
         Drawable res = getResources().getDrawable(imageResource);
         ri.setImageDrawable(res);
-        rn.setText("Restaurant Name");
-        operatingDaysStart.setText("N/A");
-        operatingHoursStart.setText("N/A");
-        address.setText("N/A");
-        contact.setText("N/A");
+        rn.setText("Click Any Restaurant");
+        operatingDaysStart.setText("");
+        operatingHoursStart.setText("");
+        address.setText("");
+        contact.setText("");
         price.setText("");
-        cuisine.setText("N/A");
-        distance.setText("N/A");
-        foodtype.setText("N/A");
+        cuisine.setText("");
+        distance.setText("");
+        foodtype.setText("");
 
         ratingBar.setIsIndicator(true);
         ratingBar.setRating(0);

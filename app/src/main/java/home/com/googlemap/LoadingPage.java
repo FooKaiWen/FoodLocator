@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Window;
 
 public class LoadingPage extends AppCompatActivity {
 
