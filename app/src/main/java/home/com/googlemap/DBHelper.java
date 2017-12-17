@@ -7,7 +7,6 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -17,7 +16,7 @@ import java.util.HashMap;
 public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "restaurant_profile.db";
-    public static final String CONTACTS_TABLE_NAME = "restaurant";
+    public static final String RESTAURANT_TABLE_NAME = "restaurant";
     public static final String RESTAURANT_COLUMN_ID = "id";
     public static final String RESTAURANT_COLUMN_NAME = "name";
     public static final String RESTAURANT_COLUMN_CUISINE = "cuisine";
@@ -32,8 +31,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String RESTAURANT_COLUMN_LONGITUDE = "longitude";
     public static final String RESTAURANT_COLUMN_IMAGENAME = "imagename";
     public static final String RESTAURANT_COLUMN_FOODTYPE = "foodtype";
-
-    private HashMap hp;
+    public static final String RESTAURANT_COLUMN_RATING = "rating";
 
     public DBHelper(Context context){
         super(context, DATABASE_NAME, null, 1);
@@ -43,7 +41,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db){
         db.execSQL("create table restaurant" + "(id integer primary key, name text,cuisine text," +
                 "distance blob, work blob, rest blob, time text, price text, contact text," +
-                " address blob, latitude blob, longitude blob, imagename text, foodtype text)");
+                " address blob, latitude blob, longitude blob, imagename text, foodtype text, rating real)");
     }
 
     @Override
@@ -55,7 +53,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean insertRestaurant (String name, String cuisine, String distance, String work,
                                      String rest, String time, String price, String contact,
-                                     String address, String latitude, String longitude, String imagename, String foodtype){
+                                     String address, String latitude, String longitude,
+                                     String imagename, String foodtype, String rating){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("name",name);
@@ -71,6 +70,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("longitude",longitude);
         contentValues.put("imagename",imagename);
         contentValues.put("foodtype",foodtype);
+        contentValues.put("rating",rating);
         db.insert("restaurant",null,contentValues);
         return true;
     }
@@ -87,34 +87,21 @@ public class DBHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    public Cursor getRandomDataforSpinner(String cuisine, String price, int randomNum){
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("select * from(select * from restaurant "+cuisine+") "+price+"",null);
-        return res;
-    }
-
     public Cursor getDataUsingName(String name){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select * from restaurant where name='"+name+"'",null);
         return res;
     }
 
-    public int numberOfRows(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        return (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);
+    public void insertRating(float star, String name){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("rating",star);
+        db.update("restaurant",contentValues,"name= ?",new String[]{name});
     }
 
-    public ArrayList<String> getAllContacts(){
-        ArrayList<String>   array_List = new ArrayList<String>();
-        hp = new HashMap();
+    public int numberOfRows(){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("select * from restaurant order by id",null);
-        res.moveToFirst();
-
-        while(!res.isAfterLast()){
-            array_List.add(res.getString(res.getColumnIndex(RESTAURANT_COLUMN_ID)) + ".   " + res.getString(res.getColumnIndex(RESTAURANT_COLUMN_NAME)));
-            res.moveToNext();
-        }
-        return array_List;
+        return (int) DatabaseUtils.queryNumEntries(db, RESTAURANT_TABLE_NAME);
     }
 }
