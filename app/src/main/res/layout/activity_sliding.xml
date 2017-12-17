@@ -22,26 +22,31 @@
             android:layout_height="50dp"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="50dp"
+            android:layout_marginRight="5dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:lineSpacingExtra="14sp"
             android:textAlignment="gravity"
-            android:textSize="27sp" />
+            android:textColor="#263238"
+            android:textSize="27sp"
+            android:layout_marginEnd="10dp" />
 
         <TextView
             android:id="@+id/price"
-            android:layout_width="50dp"
+            android:layout_width="125dp"
             android:layout_height="50dp"
             android:layout_marginBottom="10dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="0dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:lineSpacingExtra="0sp"
             android:textAlignment="gravity"
-            android:textSize="27sp" />
+            android:textColor="#263238"
+            android:textSize="30sp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="10dp" />
 
     </LinearLayout>
 
@@ -53,7 +58,8 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/linearLayout2"
         android:foregroundGravity="center_horizontal"
-        android:src="@drawable/restaurant" />
+        android:src="@drawable/restaurant"
+        android:contentDescription="TODO" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -78,15 +84,16 @@
 
         <TextView
             android:id="@+id/restaurantDistance"
-            android:layout_width="10dp"
+            android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginBottom="5dp"
-            android:layout_marginLeft="70dp"
+            android:layout_marginLeft="30dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:lineSpacingExtra="0sp"
             android:textAlignment="gravity"
+            android:textColor="#263238"
             android:textSize="20sp" />
 
     </LinearLayout>
@@ -110,7 +117,7 @@
             android:layout_marginTop="15dp"
             android:layout_weight="1"
             android:ems="10"
-            android:text="cuisine"
+            android:textColor="#263238"
             android:textSize="20sp"/>
 
     </LinearLayout>
@@ -132,6 +139,7 @@
             android:text="Food Type"
             android:textSize="15sp"
             android:layout_marginLeft="20dp"
+            android:textColor="#263238"
             android:layout_marginStart="20dp" />
     </LinearLayout>
 
@@ -141,10 +149,12 @@
         android:layout_height="45dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_marginTop="12dp"
         android:layout_marginLeft="100dp"
         android:layout_below="@+id/linearLayout4"
-        android:text="TextView"
-        android:textSize="20sp" />
+        android:textColor="#263238"
+        android:textSize="20sp"
+        android:layout_marginStart="100dp" />
 
     <TextView
         android:id="@+id/operatingHoursField_Start"
@@ -154,8 +164,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginLeft="100dp"
-        android:text="TextView"
-        android:textSize="15sp" />
+        android:textColor="#263238"
+        android:textSize="15sp"
+        android:layout_marginStart="100dp" />
 
     <TextView
         android:id="@+id/contact"
@@ -166,8 +177,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="8dp"
-        android:text="TextView"
-        android:textSize="20sp" />
+        android:textColor="#263238"
+        android:textSize="20sp"
+        android:layout_marginStart="100dp" />
 
     <TextView
         android:id="@+id/address"
@@ -177,8 +189,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/imageView6"
-        android:text="TextView"
-        android:textSize="15sp" />
+        android:textColor="#263238"
+        android:textSize="15sp"
+        android:layout_marginStart="100dp" />
 
 
     <ImageView

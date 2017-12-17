@@ -8,10 +8,8 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -25,10 +23,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -72,12 +68,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private GoogleApiClient client;
-    private Marker currentLocationMarker;
     public static final String TAG = MapsActivity.class.getSimpleName();
     public static final int REQUEST_PERMISSION_CODE = 99;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private DBHelper mydb;
-    ArrayList<Marker> mapMarkers = new ArrayList<Marker>();
+    ArrayList<Marker> mapMarkers = new ArrayList<>();
     double longitude = 0;
     double latitude = 0;
     String callNo = "N/A";
@@ -102,7 +97,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sliding_layout);;
+        setContentView(R.layout.sliding_layout);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -121,17 +116,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         addListenerOnRatingBar();
         setEmptyDetails();
 
-        cuisineSpinner = (Spinner) findViewById(R.id.cuisineSpinner);
+        cuisineSpinner =  findViewById(R.id.cuisineSpinner);
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.cuisine_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         cuisineSpinner.setAdapter(adapter);
 
-        priceSpinner = (Spinner) findViewById(R.id.priceSpinner);
+        priceSpinner = findViewById(R.id.priceSpinner);
         final ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.price_array, android.R.layout.simple_spinner_item);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         priceSpinner.setAdapter(adapter2);
 
-        mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        mLayout =  findViewById(R.id.sliding_layout);
         mLayout.setFadeOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,7 +134,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        FloatingActionButton randomFill = (FloatingActionButton) findViewById(R.id.randomFilters);
+        FloatingActionButton randomFill =  findViewById(R.id.randomFilters);
         randomFill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -242,7 +237,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        ImageButton callB = (ImageButton) findViewById(R.id.callButton);
+        ImageButton callB =  findViewById(R.id.callButton);
         callB.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
                 if (!callNo.isEmpty() && !callNo.equals("N/A")) {
@@ -258,7 +253,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        ImageButton uberB = (ImageButton) findViewById(R.id.transportButton);
+        ImageButton uberB =  findViewById(R.id.transportButton);
         uberB.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
                 PackageManager pm = getPackageManager();
@@ -563,15 +558,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             markerOptions.snippet("Non-halal");
         }
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-        currentLocationMarker = mMap.addMarker(markerOptions);
+        Marker currentLocationMarker = mMap.addMarker(markerOptions);
         mapMarkers.add(mMap.addMarker(markerOptions));
     }
 
     public void getSpinnerData(){
         mMap.clear();
-        cuisineSpinner = (Spinner)findViewById(R.id.cuisineSpinner);
+        cuisineSpinner = findViewById(R.id.cuisineSpinner);
         String cuisinetext = cuisineSpinner.getSelectedItem().toString();
-        priceSpinner = (Spinner)findViewById(R.id.priceSpinner);
+        priceSpinner = findViewById(R.id.priceSpinner);
         String pricetext = priceSpinner.getSelectedItem().toString();
         String price;
         String cuisine;
@@ -602,16 +597,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void setDetails(Cursor restaurant) {
-        rn = (TextView) findViewById(R.id.restaurantName);
-        ri = (ImageView) findViewById(R.id.restaurantImage);
-        distance = (TextView) findViewById(R.id.restaurantDistance);
-        operatingDaysStart = (TextView) findViewById(R.id.operatingDaysField_Start);
-       operatingHoursStart = (TextView) findViewById(R.id.operatingHoursField_Start);
-        address = (TextView) findViewById(R.id.address);
-        contact = (TextView) findViewById(R.id.contact);
-        price = (TextView) findViewById(R.id.price);
-        cuisine = (TextView) findViewById(R.id.cuisine);
-        foodtype = (TextView) findViewById(R.id.foodType);
+        rn =  findViewById(R.id.restaurantName);
+        ri =  findViewById(R.id.restaurantImage);
+        distance =  findViewById(R.id.restaurantDistance);
+        operatingDaysStart = findViewById(R.id.operatingDaysField_Start);
+       operatingHoursStart =  findViewById(R.id.operatingHoursField_Start);
+        address =  findViewById(R.id.address);
+        contact =  findViewById(R.id.contact);
+        price =  findViewById(R.id.price);
+        cuisine =  findViewById(R.id.cuisine);
+        foodtype = findViewById(R.id.foodType);
         rn.setText(restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_NAME)));
 
         String uri = "@drawable/" + restaurant.getString(restaurant.getColumnIndex(DBHelper.RESTAURANT_COLUMN_IMAGENAME));
@@ -632,23 +627,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void setEmptyDetails() {
-        rn = (TextView) findViewById(R.id.restaurantName);
-        ri = (ImageView) findViewById(R.id.restaurantImage);
-        distance = (TextView) findViewById(R.id.restaurantDistance);
-        operatingDaysStart = (TextView) findViewById(R.id.operatingDaysField_Start);
-        operatingHoursStart = (TextView) findViewById(R.id.operatingHoursField_Start);
-        address = (TextView) findViewById(R.id.address);
-        contact = (TextView) findViewById(R.id.contact);
-        price = (TextView) findViewById(R.id.price);
-        cuisine = (TextView) findViewById(R.id.cuisine);
-        foodtype = (TextView) findViewById(R.id.foodType);
+        rn =  findViewById(R.id.restaurantName);
+        ri =  findViewById(R.id.restaurantImage);
+        distance =  findViewById(R.id.restaurantDistance);
+        operatingDaysStart =  findViewById(R.id.operatingDaysField_Start);
+        operatingHoursStart =  findViewById(R.id.operatingHoursField_Start);
+        address =  findViewById(R.id.address);
+        contact =  findViewById(R.id.contact);
+        price =  findViewById(R.id.price);
+        cuisine =  findViewById(R.id.cuisine);
+        foodtype = findViewById(R.id.foodType);
 
 
         String uri = "@drawable/restaurant";
         int imageResource = getResources().getIdentifier(uri, null, getPackageName());
         Drawable res = getResources().getDrawable(imageResource);
         ri.setImageDrawable(res);
-        rn.setText("Click Any Restaurant");
+        rn.setText(R.string.clickAnyRestaurant);
         operatingDaysStart.setText("");
         operatingHoursStart.setText("");
         address.setText("");
@@ -695,14 +690,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void addListenerOnRatingBar() {
 
-        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        ratingBar =  findViewById(R.id.ratingBar);
 
         //if rating value is changed,
         //display the current rating value in the result (textview) automatically
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             public void onRatingChanged(RatingBar ratingBar, float rating,
                                         boolean fromUser) {
-                TextView rn = (TextView) findViewById(R.id.restaurantName);
+                TextView rn =  findViewById(R.id.restaurantName);
                 String name = rn.getText().toString();
                 if(!name.equals("Restaurant Name")){
                     mydb.insertRating(rating,name);
@@ -854,7 +849,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 "Plaza Ivory, 1, Halaman Bukit Gambir, Sunway Bukit Gambier, 11700 Gelugor, Pulau Pinang",
                 "5.357856","100.292489","korean_gil", "Halal","0");
 
-        mydb.insertRestaurant("Restaurant Lk Western Cafe", "Cafe","1.7 km",
+        mydb.insertRestaurant("LK Western Cafe", "Cafe","1.7 km",
                 "MON - SUN","12:30 - 23:00", "$$","04-659 1637",
                 "2-1-11, Plaza Ivory, Persiaran Bukit Gambir, Sunway Bukit Gambier, 11700 Gelugor, Pulau Pinang",
                 "5.358259","100.292554", "lk_western", "Halal", "0");
@@ -874,7 +869,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 "Medan Kampung Relau 1, Bayan Lepas, 11900 Bayan Lepas, Pulau Pinang",
                 "5.332584", "100.293021", "spade_burger", "Non-halal", "0");
 
-        mydb.insertRestaurant("Tsuruya Japanese Restaurant","Japenese","3.4 km",
+        mydb.insertRestaurant("Tsuruya Japanese Restaurant","Japanese","3.4 km",
                 "MON - SUN",  "11:30 - 22:00", "$$", "04-641 0828",
                 "i-, 1-1-38/39, Medan Kampung Relau 1, Bayan Lepas, 11900 Bayan Lepas, Penang",
                 "5.333247","100.293239", "tsuruya","Non-halal", "0");

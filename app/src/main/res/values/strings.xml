@@ -5,6 +5,8 @@
     <string name="uber">Uber</string>
     <string name="call">Call</string>
     <string name="restaurant_details">Restaurant Details</string>
+    <string name="clickAnyRestaurant">Click Any Restaurant</string>
+    <string name="textview">TextView</string>
     <string-array name="cuisine_array">
         <item>All Cuisine</item>
         <item>African</item>
@@ -16,6 +18,9 @@
         <item>Malay</item>
         <item>Multi-Cuisine</item>
         <item>Western</item>
+        <item>Korean</item>
+        <item>Arabic</item>
+        <item>Nyonya</item>
     </string-array>
     <string-array name="price_array">
         <item>All Price</item>
