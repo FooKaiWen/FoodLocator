@@ -37,8 +37,8 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/randomFilters"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
@@ -47,6 +47,7 @@
         android:layout_marginRight="12dp"
         android:clickable="true"
         android:focusable="true"
+        android:src="@drawable/click_button"
         app:backgroundTint="@android:color/holo_green_dark" />
 
 </RelativeLayout>

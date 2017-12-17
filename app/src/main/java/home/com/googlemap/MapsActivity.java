@@ -727,7 +727,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mUiSettings.setMyLocationButtonEnabled(true);
             mUiSettings.setTiltGesturesEnabled(true);
             mUiSettings.setRotateGesturesEnabled(false);
-
         }
     }
 
@@ -740,106 +739,155 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void insertData(){
 
-        mydb.insertRestaurant("Bumbledees at 1938", "Western", "0.8",
-                "MON - FRI", "SAT - SUN", "9:00 - 20:00", "$$", "+6019-4733777",
+        mydb.insertRestaurant("Bumbledees at 1938", "Western", "0.8 km",
+                "MON - FRI", "9:00 - 20:00", "$$", "+6019-4733777",
                 "BumbleDee's Cafe, 11800 George Town, Penang, Malaysia",
                 "5.362104", "100.306944", "bumbledee", "Halal","0");
 
-        mydb.insertRestaurant("The Kapits", "Western", "0.6",
-                "MON-SUN", "N/A", "10:00 - 0:00", "$", "+6013-4999507",
+        mydb.insertRestaurant("The Kapits", "Western", "0.6 km",
+                "MON-SUN", "10:00 - 0:00", "$", "+6013-4999507",
                 "8, Jalan Gemilang, 11800 Gelugor, Pulau Pinang",
                 "5.360454", "100.303527", "the_kapits", "Halal","0");
 
-        mydb.insertRestaurant("Chicos cafe", "Western", "0.45",
-                "MON - FRI", " SAT - SUN", "8:00 - 17:00", "$", "+6012-4819061",
+        mydb.insertRestaurant("Chicos cafe", "Western", "0.45 km",
+                "MON - FRI", "8:00 - 17:00", "$", "+6012-4819061",
                 "D01, Anjung Budi, Jalan Ilmu, 11800 Gelugor, Pulau Pinang",
                 "5.357409","100.306151", "chico_cafe", "Halal","0");
 
-        mydb.insertRestaurant("Subaidah USM", "Indian", "0.22",
-                "MON - SUN", "N/A", "7:00 - 22:00", "$", "N/A",
+        mydb.insertRestaurant("Subaidah USM", "Indian", "0.22 km",
+                "MON - SUN", "7:00 - 22:00", "$", "N/A",
                 "17, Jalan Universiti, 11800 Gelugor, Pulau Pinang",
                 "5.356727", "100.304263", "subaidah", "Halal","0");
 
-        mydb.insertRestaurant("Golden Phoenix Restaurant", "Chinese", "0.7",
-                "MON - SUN", "N/A", "7:00 - 1:00", "$", "+6012-4206888",
+        mydb.insertRestaurant("Golden Phoenix Restaurant", "Chinese", "0.7 km",
+                "MON - SUN", "7:00 - 1:00", "$", "+6012-4206888",
                 "2-G-2, Jalan Sungai Dua, Taman Pekaka Desa University, 11700 Gelugor, Pulau Pinang",
                 "5.352714", "100.300135", "phoenix", "Non-halal","0");
 
-        mydb.insertRestaurant("Uview Cafe", "Multi-Cuisine", "0.24",
-                "MON - SAT", "SUN", "OPEN FOR 24 HOURS", "$", "+6019-5652249",
+        mydb.insertRestaurant("Uview Cafe", "Multi-Cuisine", "0.24 km",
+                "MON - SAT", "OPEN FOR 24 HOURS", "$", "+6019-5652249",
                 "Jalan Universiti, 11800 Gelugor, Pulau Pinang",
                 "5.35877", "100.308409", "uview", "Halal","0");
 
-        mydb.insertRestaurant("Campus Cafe USM","Multi-Cuisine", "0.8",
-                "MON -FRI", "SAT - SUN", "10:30 - 17:00", "$ ","+6012-4482725",
+        mydb.insertRestaurant("Campus Cafe USM","Multi-Cuisine", "0.8 km",
+                "MON -FRI", "10:30 - 17:00", "$ ","+6012-4482725",
                 "Bangunan Canselori, 11700 Gelugor, Pulau Pinang", "5.358079",
                 "100.305627", "campus_cafe", "Halal","0");
 
-        mydb.insertRestaurant("43 Cafe","Cafe","0.55",
-                "MON - SUN", "N/A","17:30 - 22:00", "$$","+6016-430 7009",
+        mydb.insertRestaurant("43 Cafe","Cafe","0.55 km",
+                "MON - SUN", "17:30 - 22:00", "$$","+6016-430 7009",
                 "43, Jalan Sungai Dua, Kampung Dua Bukit, 11700 Gelugor, Pulau Pinang",
                 "5.3532864","100.303787", "cafe_43", "Non-halal","0");
 
-        mydb.insertRestaurant("Riszona Restaurant","African","0.55",
-                "MON - SUN","N/A", "12:00 - 0:00","$","010-774 4948",
+        mydb.insertRestaurant("Riszona Restaurant","African","0.55 km",
+                "MON - SUN","12:00 - 0:00","$","010-774 4948",
                 "77B-1-14, Jalan Sungai Dua, Kampung Dua Bukit, 11700 Gelugor, Pulau Pinang",
                 "5.352696","100.302292","riszona","Non-halal","0");
 
-        mydb.insertRestaurant("Kopitan Classic","Cafe","0.6",
-                "MON - SUN","N/A","11:00 - 23:00","$$","04-537 5697",
+        mydb.insertRestaurant("Kopitan Classic","Cafe","0.6 km",
+                "MON - SUN","11:00 - 23:00","$$","04-537 5697",
                 "4, Lorong Cempedak 2, Kampung Dua Bukit, 14000 Gelugor, Pulau Pinang",
                 "5.352553","100.301864", "kopitan_classic_sungai_dua","Halal","0");
 
-        mydb.insertRestaurant("KFC","Fast Food","0.7",
-                "MON - SUN","N/A","0:00 - 0:00","$","04-656 8539",
+        mydb.insertRestaurant("KFC","Fast Food","0.7 km",
+                "MON - SUN","0:00 - 0:00","$","04-656 8539",
                 "559 & 559A, Jalan Taman Sri Saujana,, Sungai Dua, 11700 George Town, Pulau Pinang",
                 "5.3524329","100.301435","kfc","Halal","0");
 
-        mydb.insertRestaurant("Man Burger Stall","Hawker Stall","0.75",
-                "MON - SUN","N/A","19:00 - 1:00","$","017-303 6067",
+        mydb.insertRestaurant("Man Burger Stall","Hawker Stall","0.75 km",
+                "MON - SUN","19:00 - 1:00","$","017-303 6067",
                 "Desa University Comm. Complex, 6, Jalan Sungai Dua, 11700 Gelugor, Pulau Pinang",
                 "5.352384","100.299587","man_burger","Halal","0");
 
-        mydb.insertRestaurant("McDonalds", "Fast Food", "0.8",
-                "MON-SUN","N/A","OPEN FOR 24 HOURS", "$", "+6 04-659 6346",
+        mydb.insertRestaurant("McDonalds", "Fast Food", "0.8 km",
+                "MON-SUN","OPEN FOR 24 HOURS", "$", "+6 04-659 6346",
                 "4 B-C-D, Jalan Sungai Dua, 11700 Gelugor, Pulau Pinang", "5.352578",
                 "100.299404","mcdonalds_sungai_dua", "Halal","0");
 
-        mydb.insertRestaurant("Plus 2 Restaurant", "Chinese", "0.8",
-                "MON - SUN", "TUE", "11:00 - 19:30", "$", "04-656 7118",
+        mydb.insertRestaurant("Plus 2 Restaurant", "Chinese", "0.8 km",
+                "MON - SUN", "11:00 - 19:30", "$", "04-656 7118",
                 "4K, Jalan Sungai Dua, Taman Pekaka Desa University, 11700 Gelugor, Pulau Pinang",
                 "5.352478", "100.299189", "plus_2", "Non-halal","0");
 
-        mydb.insertRestaurant("Pizza Hut", "Fast Food", "0.8",
-                "MON-SUN", "N/A", "11:00 - 23:00","$", "1-300-88-2525",
+        mydb.insertRestaurant("Pizza Hut", "Fast Food", "0.8 km",
+                "MON-SUN", "11:00 - 23:00","$", "1-300-88-2525",
                 "Desa University, 4, Jalan Sungai Dua, 11700, Pulau Pinang",
                 "5.352470", "100.299102", "pizza_hut_sungai_dua", "Halal","0");
 
-        mydb.insertRestaurant("Nasi Kandar Pelita","Malay","0.9",
-                "MON - SUN","N/A","0:00 - 0:00","$","04-656 4602",
+        mydb.insertRestaurant("Nasi Kandar Pelita","Malay","0.9 km",
+                "MON - SUN","0:00 - 0:00","$","04-656 4602",
                 "723l-g, Jalan Sungai Dua, Desa Permai Indah, 11700 Gelugor, Pulau Pinang",
                 "5.352024","100.299324","nasi_kandar_pelita","Halal","0");
 
-        mydb.insertRestaurant("Hidden Recipe Cafe", "Cafe","0.9",
-                "TUE - SUN","MON","11:30 - 22:00","$$", "012-534 5496",
+        mydb.insertRestaurant("Hidden Recipe Cafe", "Cafe","0.9 km",
+                "TUE - SUN","11:30 - 22:00","$$", "012-534 5496",
                 "723-G,Yellow House,Vanda Buisness Park,, Jalan Sungai Dua,Sungai Dua, 11700 George Town, Penang",
                 "5.351739","100.298909","hidden_recipe", "Halal","0");
 
-        mydb.insertRestaurant("Restaurant Kim Hin", "Chinese", "0.95",
-                "MON - SUN", "WED", "16:30 - 22:00", "$", "+60 16-551 9152",
+        mydb.insertRestaurant("Restaurant Kim Hin", "Chinese", "0.95 km",
+                "MON - SUN", "16:30 - 22:00", "$", "+60 16-551 9152",
                 "MK 13, 674C, Jalan Sungai Dua, Taman Pekaka, 11700 Gelugor, Pulau Pinang",
                 "5.351722", "100.298206", "kim_him_seafood", "Non-halal","0");
 
-        mydb.insertRestaurant("Restaurant Heng Leong Seafood","Chinese","1.0",
-                "MON - SUN","TUE","16:30 - 22:00", "$","016-484 1383",
+        mydb.insertRestaurant("Restaurant Heng Leong Seafood","Chinese","1.0 km",
+                "MON - SUN","16:30 - 22:00", "$","016-484 1383",
                 "Taman Pekaka, 11700 Sungai Dua, Penang","5.351511","100.298093",
                 "heng_leong","Non-halal","0");
 
-        mydb.insertRestaurant("Restaurant Hutton Lane	Chinese	","Chinese", "1.0",
-                "MON - SUNDAY","N/A	","11:00 - 22:30","$", "04-656 6586",
+        mydb.insertRestaurant("Restaurant Hutton Lane	Chinese	","Chinese", "1.0 km",
+                "MON - SUNDAY","11:00 - 22:30","$", "04-656 6586",
                 "727F, Jalan Sungai Dua, Desa Permai Indah, 11700 Gelugor, Pulau Pinang	",
                 "5.351233","100.298514","hutton_lane","Non-halal","0");
 
+        mydb.insertRestaurant("Restoran Khaleel","Indian","1.5 km",
+                "MON - SUN", "6:00 - 2:00", "$","04-659 3314",
+                "1-1-11,12,12A, Plaza Ivory, Halaman Bukit Gambir, Sunway Bukit Gambier, 11700 Gelugor, Pulau Pinang",
+        "5.356694","100.292615", "khaleel","Halal","0");
+
+        mydb.insertRestaurant("Kafe RotiBakar University Place","Cafe","1.8 km",
+                "MON - SUN","8:00 - 22:00", "$$","04-655 2989",
+                "1, Halaman Bukit Gambir 3, Sunway Bukit Gambier, 11700 Gelugor, Pulau Pinang",
+                "5.357133","100.292596", "roti_bakar", "Halal", "0");
+
+        mydb.insertRestaurant("Korean Cafe Gil","Korean","1.7 km","MON - SAT",
+                "SUN","$$", "04-656 2558",
+                "Plaza Ivory, 1, Halaman Bukit Gambir, Sunway Bukit Gambier, 11700 Gelugor, Pulau Pinang",
+                "5.357856","100.292489","korean_gil", "Halal","0");
+
+        mydb.insertRestaurant("Restaurant Lk Western Cafe", "Cafe","1.7 km",
+                "MON - SUN","12:30 - 23:00", "$$","04-659 1637",
+                "2-1-11, Plaza Ivory, Persiaran Bukit Gambir, Sunway Bukit Gambier, 11700 Gelugor, Pulau Pinang",
+                "5.358259","100.292554", "lk_western", "Halal", "0");
+
+        mydb.insertRestaurant("Al Shami Restaurant","Arabic","1.7 km",
+                "MON - SUN", "15:30 - 24:00", "$$","019-232 0121",
+                "2-1-4, Plaza Ivory, Jalan Bukit Gambir, Sunway Bukit Gambier, 11700 Gelugor, Pulau Pinang",
+                "5.358177","100.292543", "alshami","Halal", "0");
+
+        mydb.insertRestaurant("Falafel Syria", "Hawker Stall","1.8 km",
+                "MON - SUN","18:00 - 24:00", "$","N/A",
+                "Sunway Bukit Gambier, 11700 Gelugor, Penang","5.358693",
+                "100.292235", "falafel","Halal","0");
+
+        mydb.insertRestaurant("Spades Burger","Fast Food","3.0 km",
+                "MON - SUN", "11:30 - 22:00", "$$$", "04-638 4848",
+                "Medan Kampung Relau 1, Bayan Lepas, 11900 Bayan Lepas, Pulau Pinang",
+                "5.332584", "100.293021", "spade_burger", "Non-halal", "0");
+
+        mydb.insertRestaurant("Tsuruya Japanese Restaurant","Japenese","3.4 km",
+                "MON - SUN",  "11:30 - 22:00", "$$", "04-641 0828",
+                "i-, 1-1-38/39, Medan Kampung Relau 1, Bayan Lepas, 11900 Bayan Lepas, Penang",
+                "5.333247","100.293239", "tsuruya","Non-halal", "0");
+
+        mydb.insertRestaurant("Sushi-Burito Spice Canopy", "Multi-cuisine","4.0 km",
+                "MON - SUN","11:00 - 22:00", "$$$", "04-642 2855",
+                "Bayan Baru, 11900 Bayan Lepas, Penang", "5.328793", "100.278882",
+                "sushi_burito","Halal", "0");
+
+        mydb.insertRestaurant("Restaurants Red Chopstick","Nyonya","3.8 km",
+                "MON - SUN", "12:00 - 21:30", "$$", "016-440 3938",
+                "1-1-5, Ideal Avenue, Jalan Tun Dr Awang, Kampung Seberang Paya, 11900 Bayan Lepas, Pulau Pinang",
+                "5.332515","100.29383","redchopstick","Non-halal","0");
     }
 
 }

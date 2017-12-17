@@ -22,7 +22,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String RESTAURANT_COLUMN_CUISINE = "cuisine";
     public static final String RESTAURANT_COLUMN_DISTANCE = "distance";
     public static final String RESTAURANT_COLUMN_WORK = "work";
-    public static final String RESTAURANT_COLUMN_REST= "rest";
     public static final String RESTAURANT_COLUMN_TIME= "time";
     public static final String RESTAURANT_COLUMN_PRICE= "price";
     public static final String RESTAURANT_COLUMN_CONTACT= "contact";
@@ -40,7 +39,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db){
         db.execSQL("create table restaurant" + "(id integer primary key, name text,cuisine text," +
-                "distance blob, work blob, rest blob, time text, price text, contact text," +
+                "distance blob, work blob, time text, price text, contact text," +
                 " address blob, latitude blob, longitude blob, imagename text, foodtype text, rating real)");
     }
 
@@ -52,7 +51,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public boolean insertRestaurant (String name, String cuisine, String distance, String work,
-                                     String rest, String time, String price, String contact,
+                                     String time, String price, String contact,
                                      String address, String latitude, String longitude,
                                      String imagename, String foodtype, String rating){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -61,7 +60,6 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("cuisine",cuisine);
         contentValues.put("distance",distance);
         contentValues.put("work",work);
-        contentValues.put("rest",rest);
         contentValues.put("time",time);
         contentValues.put("price",price);
         contentValues.put("contact",contact);

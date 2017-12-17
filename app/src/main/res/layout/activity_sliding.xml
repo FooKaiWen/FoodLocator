@@ -41,7 +41,7 @@
             android:layout_weight="1"
             android:lineSpacingExtra="0sp"
             android:textAlignment="gravity"
-            android:textSize="35sp" />
+            android:textSize="27sp" />
 
     </LinearLayout>
 
@@ -87,13 +87,13 @@
             android:layout_weight="1"
             android:lineSpacingExtra="0sp"
             android:textAlignment="gravity"
-            android:textSize="25sp" />
+            android:textSize="20sp" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="90dp"
+        android:layout_height="55dp"
         android:background="#ffa726"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -107,47 +107,55 @@
             android:layout_height="35dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="100dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:layout_weight="1"
             android:ems="10"
-            android:text="cuisine" />
+            android:text="cuisine"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="#ffa726"
+        android:layout_below="@+id/linearLayout3"
+        android:orientation="vertical"
+        android:id="@+id/linearLayout4">
 
         <TextView
             android:id="@+id/foodType"
-            android:layout_width="10dp"
-            android:layout_height="wrap_content"
-
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="50dp"
-            android:layout_weight="1"
-            android:text="TextView" />
-
-
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:text="Food Type"
+            android:textSize="15sp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/operatingDaysField_Start"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="10dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/linearLayout3"
+        android:layout_marginLeft="100dp"
+        android:layout_below="@+id/linearLayout4"
         android:text="TextView"
-        android:textSize="30sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/operatingHoursField_Start"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="100dp"
+        android:layout_alignBottom="@+id/imageView5"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/linearLayout3"
+        android:layout_marginLeft="100dp"
         android:text="TextView"
-        android:textSize="20sp" />
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/contact"
@@ -177,10 +185,11 @@
         android:id="@+id/imageView5"
         android:layout_width="65dp"
         android:layout_height="65dp"
-        android:layout_alignBottom="@+id/operatingHoursField_Start"
+        android:layout_above="@+id/callButton"
+        android:layout_alignEnd="@+id/callButton"
         android:layout_alignLeft="@+id/callButton"
+        android:layout_alignRight="@+id/callButton"
         android:layout_alignStart="@+id/callButton"
-        android:layout_marginBottom="8dp"
         android:src="@drawable/open" />
 
     <ImageButton
@@ -215,15 +224,15 @@
 
     <ImageView
         android:id="@+id/imageView6"
-        android:layout_width="70dp"
+        android:layout_width="65dp"
         android:layout_height="65dp"
+        android:layout_alignEnd="@+id/callButton"
         android:layout_alignLeft="@+id/callButton"
         android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/callButton"
         android:layout_alignStart="@+id/callButton"
         android:background="#eceff1"
         android:src="@drawable/location" />
-
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -278,7 +287,6 @@
             android:layout_height="80dp"
             android:layout_gravity="bottom"
             android:layout_weight="1"></ListView>
-
-    </LinearLayout>
+</LinearLayout>
 
 </RelativeLayout>
