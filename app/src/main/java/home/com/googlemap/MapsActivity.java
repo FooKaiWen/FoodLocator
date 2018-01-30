@@ -231,6 +231,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     rs = mydb.getData(randomNum);
                     rs.moveToFirst();
                     setDetails(rs);
+                    getLatLngCallNo(rs);
                     Toast.makeText(getApplicationContext(), "We randomly chose for you!", Toast.LENGTH_LONG).show();
                     anchorThePane();
                 }
@@ -380,6 +381,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     rs.moveToFirst();
                     setDetails(rs);
                     getLatLngCallNo(rs);
+                    Toast.makeText(getApplicationContext(),"SCROLL UP FOR MORE",Toast.LENGTH_LONG).show();
                     return false;
                 }
         });
@@ -462,14 +464,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             });
         }
-//        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-//
-//          LocationServices.FusedLocationApi.requestLocationUpdates(client,locationRequest,this);
-//          LocationServices.getFusedLocationProviderClient(this).getLastLocation();
-//
-//        }
-//
-//        Log.i(TAG, "Location services connected.");
+
     }
 
     public boolean checkLocationPermission() {
