@@ -1,4 +1,4 @@
-# CATGOOGLEMAP
+# FoodLocator
 
 Hi there.
 This is a project for our Computer Science course. 
